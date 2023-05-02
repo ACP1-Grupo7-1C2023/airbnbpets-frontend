@@ -1,0 +1,12 @@
+name: Deployment
+
+on:
+  push:
+    branches: ["production"]
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    if: ${{contains(github.ref,'production')}}
+    steps:
+      - run: curl https://api.render.com/deploy/srv-ch8puqks3fvq1l0kmteg?key=KPbCdunIUvw
