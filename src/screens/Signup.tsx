@@ -8,7 +8,7 @@ export const Signup = () => {
     <Background />
     <div className="signup-card">
       <h2 className="signup-title">Create a new account</h2>
-      <form className="signup-form">
+      <form className="signup-form" onSubmit={e => { e.preventDefault() }}>
         <div className="signup-form-item">
           <FaEnvelope className="signup-form-icon"/>
           <input className="signup-form-input" type="text" placeholder="Email" />
@@ -17,9 +17,13 @@ export const Signup = () => {
           <FaLock className="signup-form-icon"/>
           <input className="signup-form-input" type="password" placeholder="Password" />
         </div>
+        <div className="signup-form-item">
+          <FaLock className="signup-form-icon"/>
+          <input className="signup-form-input" type="password" placeholder="Repeat password" />
+        </div>
         <button type="submit" className="signup-btn">Sign Up</button>
       </form>
-      <p className="signup-link">Do you have an account?
+      <p className="signup-link">Already have an account?
         <span><a href="/login">Login</a></span>
       </p>
     </div>

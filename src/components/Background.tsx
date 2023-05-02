@@ -29,7 +29,7 @@ export const Background = () => {
             default: "bounce",
           },
           random: false,
-          speed: 0.25,
+          speed: 0.3,
           straight: false,
         },
         number: {

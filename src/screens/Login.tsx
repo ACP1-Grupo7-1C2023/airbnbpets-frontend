@@ -8,7 +8,7 @@ export const Login = () => {
     <Background />
     <div className="login-card">
       <h2 className="login-title">Log in to your account</h2>
-      <form className="login-form">
+      <form className="login-form" onSubmit={e => { e.preventDefault() }}>
         <div className="login-form-item">
           <FaEnvelope className="login-form-icon"/>
           <input className="login-form-input" type="text" placeholder="Email" />
