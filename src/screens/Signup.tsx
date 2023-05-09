@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useAppDispatch } from '../state';
 import { signup } from '../state/actions';
+import { TypeSwitch } from '../components/TypeSwitch';
 
 type SignupInputs = {
   firstName: string;
@@ -36,12 +37,13 @@ export const Signup = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [type, setType] = useState<'petSitter' | 'host'>('petSitter');
 
   const onSubmit = async (data: SignupInputs) => {
     setError('');
     setLoading(true);
     try {
-      await dispatch(signup(data.firstName, data.lastName, data.email, data.password));
+      await dispatch(signup(data.firstName, data.lastName, data.email, data.password, type));
     } catch (error: any) {
       if (error?.code && error.code === 409) {
         setError('Email already in use');
@@ -82,6 +84,10 @@ export const Signup = () => {
           <input className="login-form-input" type="password" placeholder="Repeat password" {...register("repeatPassword")} maxLength={50} />
         </div>
         {errors.repeatPassword && <p className="login-form-input-error">{errors.repeatPassword.message}</p>}
+        <div className="login-form-type">
+          <p className="login-form-type-label">I want to be a {type === 'petSitter' ? 'Pet sitter' : 'Host'}</p>
+          <TypeSwitch type={type} setType={setType} />
+        </div>
         {error && <p className="login-error">{error}</p>}
         <button type="submit" className="login-btn" disabled={loading}>{
           loading ? (

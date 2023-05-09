@@ -6,7 +6,7 @@ const baseURL = process.env.REACT_APP_API_URL;
 export type AuthAction = {
   type: "LOGIN",
   payload: string;
-} | {
+}  | {
   type: "LOGOUT",
 }
 
@@ -26,10 +26,14 @@ export const logout = () => (dispatch: AppDispatch) => {
   dispatch({ type: "LOGOUT" });
 }
 
-export const signup = (name: string, lastName: string, email: string, password: string) => async (dispatch: AppDispatch) => {
+export const signup = (name: string, lastName: string, email: string, password: string, type: 'petSitter' | 'host') => async (dispatch: AppDispatch) => {
   try {
-    let response = await axios.post(`${baseURL}/users`, {name, lastName, email, password});
+    console.log({
+      name, lastName, email, password, type
+    })
+    let response = await axios.post(`${baseURL}/users`, {name, lastName, email, password, type});
     // response contains id
+    console.log(response.data);
     response = await axios.post(`${baseURL}/login`, {email, password});
     dispatch({ type: "LOGIN", payload: response.data });
   } catch (e) {
