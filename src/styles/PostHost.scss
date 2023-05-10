@@ -1,0 +1,41 @@
+.post_host_container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+  background: var(--background-color);
+
+  .post_host_title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+  }
+
+  .post_host_content {
+    background: #fff;
+    width: 800px;
+    padding: 48px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .post_host_form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      .post_host_submit_container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+    }
+  }
+}

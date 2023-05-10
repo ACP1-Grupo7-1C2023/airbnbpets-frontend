@@ -1,8 +1,9 @@
 .header_container {
-  position: sticky;
+  position: fixed;
   top: 0;
   width: 100%;
-  background: var(--background-color);
+  background: #1f273f;
+  border-bottom: 1px solid #2c3752;
   display: flex;
   flex-direction: row;
   align-items: center;
