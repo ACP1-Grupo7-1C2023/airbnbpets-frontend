@@ -1,11 +1,11 @@
 import { useState } from "react";
-import "../styles/PostHost.scss";
-import "../styles/Login.scss";
+import "../../styles/PostHost.scss";
+import "../../styles/Login.scss";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
-import { Header } from "../components/Header";
+import { Header } from "../../components/Header";
 
 type PostInputs = {
   title: string;

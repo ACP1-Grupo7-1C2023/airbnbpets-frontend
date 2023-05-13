@@ -1,1 +1,4 @@
-export type UserType = 'petSitter' | 'host';
+export enum UserType {
+  Sitter = 'petSitter',
+  Host = 'host'
+}

@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import '../styles/Login.scss';
+import '../../styles/Login.scss';
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { Background } from '../components/Background';
-import { useAppDispatch } from '../state';
-import { login } from '../state/actions';
+import { Background } from '../../components/Background';
+import { useAppDispatch } from '../../state';
+import { login } from '../../state/actions';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
-import { TypeSwitch } from '../components/TypeSwitch';
-import { UserType } from '../interfaces/AppInterfaces';
+import { TypeSwitch } from '../../components/TypeSwitch';
+import { UserType } from '../../interfaces/AppInterfaces';
 
 type LoginInputs = {
   email: string;
@@ -28,7 +28,7 @@ export const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [type, setType] = useState<UserType>('petSitter');
+  const [type, setType] = useState<UserType>(UserType.Sitter);
 
   const onSubmit = async (data: LoginInputs) => {
     setError('');

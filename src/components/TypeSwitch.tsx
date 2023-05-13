@@ -2,10 +2,11 @@
 import { FaDog, FaHome } from 'react-icons/fa';
 import ReactSwitch from 'react-switch';
 import '../styles/TypeSwitch.scss';
+import { UserType } from '../interfaces/AppInterfaces';
 
 type TypeSwitchProps = {
-  type: 'petSitter' | 'host';
-  setType: (type: 'petSitter' | 'host') => void;
+  type: UserType;
+  setType: (type: UserType) => void;
 }
 
 export const TypeSwitch = ({ type, setType }: TypeSwitchProps) => {
@@ -15,7 +16,7 @@ export const TypeSwitch = ({ type, setType }: TypeSwitchProps) => {
     offColor="#535657"
     onHandleColor="#fff"
     offHandleColor="#fff"
-    onChange={() => setType(type === 'petSitter' ? 'host' : 'petSitter')}
+    onChange={() => setType(type === UserType.Sitter ? UserType.Host : UserType.Sitter)}
     uncheckedIcon={false}
     checkedIcon={false}
     uncheckedHandleIcon={<FaDog className="switch-icon" size={16} />}

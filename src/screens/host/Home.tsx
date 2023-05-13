@@ -1,10 +1,9 @@
 import { PostHost } from "./PostHost";
 
-export const Home = () => {
-
+export const HostHome = () => {
   return (
-    <div>
+    <>
       <PostHost />
-    </div>
+    </>
   );
 }
