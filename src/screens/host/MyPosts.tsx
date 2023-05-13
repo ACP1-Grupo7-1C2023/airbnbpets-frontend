@@ -1,59 +1,25 @@
 import "../../styles/Post.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
 import { Post } from "../../interfaces/AppInterfaces";
 import { PostItem } from "../../components/PostItem";
-import { Flex, Text, useToast } from "@chakra-ui/react";
+import { Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { NewPostModal } from "../../components/NewPostModal";
-
-const data: Post[] = [
-  {
-    id: 1,
-    title: "departamento en palermo",
-    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
-    location: "CABA",
-    startAt: "2023-06-10T00:00:00.000Z",
-    finishAt: "2023-06-10T00:00:00.000Z"
-  },
-  {
-    id: 2,
-    title: "departamento en palermo",
-    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
-    location: "CABA",
-    startAt: "2023-06-10T00:00:00.000Z",
-    finishAt: "2023-06-10T00:00:00.000Z"
-  },
-  {
-    id: 3,
-    title: "departamento en palermo",
-    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
-    location: "CABA",
-    startAt: "2023-06-10T00:00:00.000Z",
-    finishAt: "2023-06-10T00:00:00.000Z"
-  },
-  {
-    id: 4,
-    title: "departamento en palermo",
-    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
-    location: "CABA",
-    startAt: "2023-06-10T00:00:00.000Z",
-    finishAt: "2023-06-10T00:00:00.000Z"
-  },
-  {
-    id: 5,
-    title: "departamento en palermo",
-    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
-    location: "CABA",
-    startAt: "2023-06-10T00:00:00.000Z",
-    finishAt: "2023-06-10T00:00:00.000Z"
-  }
-]
+import api from "../../api";
+import { useAppDispatch, useAppSelector } from "../../state";
+import { logout } from "../../state/actions";
+import { MdWarning } from 'react-icons/md';
+import { ShowError } from "../../components/ShowError";
 
 export const MyPosts = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const toast = useToast();
+  const [error, setError] = useState('');
+  const session = useAppSelector(state => state.auth.session);
+  const dispatch = useAppDispatch();
 
   const onPostClick = () => {
     setModalVisible(true);
@@ -63,16 +29,66 @@ export const MyPosts = () => {
     setModalVisible(false);
   }
 
+  const getMyPosts = async () => {
+    setLoading(true);
+    if (!session) {
+      setError('You must be logged in to view your posts');
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await api.get<Post[]>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` }});
+      setPosts(response.data);
+      setLoading(false);
+    } catch (error: any) {
+      if (error?.code && error.code === 401) {
+        dispatch(logout());
+      }
+      setError('Something went wrong, try again later');
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    getMyPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="post_container">
+        <HostHeader />
+        <div className="post_list_container">
+          <Stack w="800px" h="100%" spacing="4" overflow="hidden">
+            <Skeleton h='200px' />
+            <Skeleton h='200px' />
+            <Skeleton h='200px' />
+            <Skeleton h='200px' />
+            <Skeleton h='200px' />
+          </Stack>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="post_container">
+        <HostHeader />
+        <ShowError error={error} />
+      </div>
+    );
+  }
+
   return (
     <div className="post_container">
       <HostHeader />
       <div className="post_list_container">
-        {data.length === 0 && (
+        {posts.length === 0 && (
           <div className="post_empty">
             <Text fontSize='lg' colorScheme='grey'>You haven't made any posts yet</Text>
           </div>
         )}
-        {data.map((post) => (
+        {posts.map((post) => (
           <PostItem key={post.id} post={post} />
         ))}
       </div>

@@ -55,9 +55,8 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
       toast({ title: 'Post created successfully!', status: 'success' });
       onClose();
     } catch (error) {
-      console.log(error);
       setLoading(false);
-      setError('An error occurred while posting');
+      setError('Something went wrong, try again later');
     }
   };
 

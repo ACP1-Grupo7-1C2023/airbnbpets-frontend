@@ -61,7 +61,7 @@ export const Login = () => {
         </div>
         {errors.password && <p className="login-form-input-error">{errors.password.message}</p>}
         <div className="login-form-type">
-          <p className="login-form-type-label">I want to be a {type === 'petSitter' ? 'Pet sitter' : 'Host'}</p>
+          <p className="login-form-type-label">Log in as {type === 'petSitter' ? 'Pet sitter' : 'Host'}</p>
           <TypeSwitch type={type} setType={setType} />
         </div>
         {error && <p className="login-error">{error}</p>}

@@ -8,6 +8,6 @@ export interface Post {
   title: string;
   description: string;
   location: string;
-  startAt: string;
-  finishAt: string;
+  startat: string;
+  finishat: string;
 }

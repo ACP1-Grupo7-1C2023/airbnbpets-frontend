@@ -36,7 +36,7 @@ export const PostItem = ({ post }: { post: Post }) => {
           <Flex direction='row' align='center' gap={1}>
             <Icon as={MdCalendarMonth} />
             <Text>
-              {parseDate(post.startAt)} - {parseDate(post.finishAt)}
+              {parseDate(post.startat)} - {parseDate(post.finishat)}
             </Text>
           </Flex>
         </Flex>
