@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
+import { TypeSwitch } from '../components/TypeSwitch';
+import { UserType } from '../interfaces/AppInterfaces';
 
 type LoginInputs = {
   email: string;
@@ -26,12 +28,13 @@ export const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [type, setType] = useState<UserType>('petSitter');
 
   const onSubmit = async (data: LoginInputs) => {
     setError('');
     setLoading(true);
     try {
-      await dispatch(login(data.email, data.password));
+      await dispatch(login(data.email, data.password, type));
     } catch (error: any) {
       if (error?.code && error.code === 404) {
         setError('Incorrect email or password');
@@ -57,6 +60,10 @@ export const Login = () => {
           <input className="login-form-input" type="password" placeholder="Password" {...register("password")} maxLength={50} />
         </div>
         {errors.password && <p className="login-form-input-error">{errors.password.message}</p>}
+        <div className="login-form-type">
+          <p className="login-form-type-label">I want to be a {type === 'petSitter' ? 'Pet sitter' : 'Host'}</p>
+          <TypeSwitch type={type} setType={setType} />
+        </div>
         {error && <p className="login-error">{error}</p>}
         <button type="submit" className="login-btn" disabled={loading}>{
           loading ? (

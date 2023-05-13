@@ -5,12 +5,12 @@ import { useAppSelector } from "../state";
 import { Home } from "../screens/Home";
 
 export const AppRouter = () => {
-  const token = useAppSelector(auth => auth.auth.token);
+  const session = useAppSelector(auth => auth.auth.session);
 
   return (
     <BrowserRouter>
       <Routes>
-        {token ? (
+        {session ? (
           <>
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<Navigate replace to="/home" />} />

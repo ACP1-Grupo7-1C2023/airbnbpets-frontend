@@ -1,19 +1,25 @@
 import { AnyAction, Reducer } from 'redux';
 
+export type Session = {
+  token: string;
+  email: string;
+  type: 'petSitter' | 'host';
+}
+
 export type AuthState = {
-  token: string | null;
+  session: Session | null;
 }
 
 const initialState: AuthState = {
-  token: null
+  session: null
 };
 
 const authReducer: Reducer<AuthState, AnyAction> = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN":
-      return { token: action.payload };
+      return { session: action.payload };
     case "LOGOUT":
-      return { token: null };
+      return { session: null };
     default:
       return state;
   }

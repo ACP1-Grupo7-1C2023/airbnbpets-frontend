@@ -2,6 +2,7 @@ import { AppRouter } from './routes/router';
 import { Provider } from 'react-redux';
 import { persistor, store } from './state';
 import { PersistGate } from 'redux-persist/integration/react';
+import './styles/Globals.scss';
 
 function App() {
   return (
