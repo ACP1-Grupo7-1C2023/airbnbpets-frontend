@@ -5,6 +5,8 @@ import { useAppSelector } from "../state";
 import { UserType } from "../interfaces/AppInterfaces";
 import { PostList } from "../screens/sitter/PostList";
 import { MyPosts } from "../screens/host/MyPosts";
+import { HostPost } from "../screens/host/Post";
+import { SitterPost } from "../screens/sitter/Post";
 
 export const AppRouter = () => {
   const session = useAppSelector(auth => auth.auth.session);
@@ -16,11 +18,13 @@ export const AppRouter = () => {
           session.type === UserType.Sitter ? (
             <>
               <Route path="/posts" element={<PostList />} />
+              <Route path="/post/:id" element={<SitterPost />} />
               <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           ) : (
             <>
               <Route path="/posts" element={<MyPosts />} />
+              <Route path="/post/:id" element={<HostPost />} />
               <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           )

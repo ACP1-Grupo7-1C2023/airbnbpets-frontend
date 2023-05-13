@@ -1,11 +1,13 @@
 import { useState } from "react";
-import "../../styles/PostHost.scss";
-import "../../styles/Login.scss";
+import "../../styles/Post.scss";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { HostHeader } from "../../components/header/HostHeader";
+import { Post } from "../../interfaces/AppInterfaces";
+import { PostItem } from "../../components/PostItem";
+import { Text } from "@chakra-ui/react";
 
 type PostInputs = {
   title: string;
@@ -23,6 +25,48 @@ const schema = yup.object().shape({
   finishAt: yup.string().required('Finish date is required')
 });
 
+const data: Post[] = [
+  {
+    id: 1,
+    title: "departamento en palermo",
+    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
+    location: "CABA",
+    startAt: "2023-06-10",
+    finishAt: "2023-06-10"
+  },
+  {
+    id: 2,
+    title: "departamento en palermo",
+    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
+    location: "CABA",
+    startAt: "2023-06-10",
+    finishAt: "2023-06-10"
+  },
+  {
+    id: 3,
+    title: "departamento en palermo",
+    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
+    location: "CABA",
+    startAt: "2023-06-10",
+    finishAt: "2023-06-10"
+  },
+  {
+    id: 4,
+    title: "departamento en palermo",
+    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
+    location: "CABA",
+    startAt: "2023-06-10",
+    finishAt: "2023-06-10"
+  },
+  {
+    id: 5,
+    title: "departamento en palermo",
+    description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
+    location: "CABA",
+    startAt: "2023-06-10",
+    finishAt: "2023-06-10"
+  }
+]
 
 export const MyPosts = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<PostInputs>({
@@ -36,11 +80,21 @@ export const MyPosts = () => {
   }
 
   return (
-    <div className="post_host_container">
+    <div className="post_container">
       <HostHeader />
-      <div className="post_host_content">
-        <h1 className="post_host_title">Make a post</h1>
-        <form className="post_host_form" onSubmit={handleSubmit(onSubmit)}>
+      <div className="post_list_container">
+        {data.length === 0 && (
+          <div className="post_empty">
+            <Text fontSize='lg' colorScheme='grey'>You haven't made any posts yet</Text>
+          </div>
+        )}
+        {data.map((post) => (
+          <PostItem key={post.id} post={post} />
+        ))}
+      </div>
+      {/* <div className="post_content">
+        <h1 className="post_title">Make a post</h1>
+        <form className="post_form" onSubmit={handleSubmit(onSubmit)}>
 
           <div className={errors.title ? "login-form-item-error" : "login-form-item"}>
             <input className="login-form-input" type="text" placeholder="Title" {...register("title")} maxLength={30} />
@@ -73,7 +127,7 @@ export const MyPosts = () => {
           {errors.finishAt && <p className="login-form-input-error">{errors.finishAt.message}</p>}
 
           {error && <p className="login-error">{error}</p>}
-          <div className="post_host_submit_container">
+          <div className="post_submit_container">
             <button type="submit" className="main_button" disabled={loading}>{
               loading ? (
                 <BeatLoader color="#fff" />
@@ -81,7 +135,7 @@ export const MyPosts = () => {
             }</button>
           </div>
         </form>
-      </div>
+      </div> */}
     </div>
   );
 }
