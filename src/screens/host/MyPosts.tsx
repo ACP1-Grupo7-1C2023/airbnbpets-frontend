@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
-import { Header } from "../../components/Header";
+import { HostHeader } from "../../components/header/HostHeader";
 
 type PostInputs = {
   title: string;
@@ -24,7 +24,7 @@ const schema = yup.object().shape({
 });
 
 
-export const PostHost = () => {
+export const MyPosts = () => {
   const { register, handleSubmit, formState: { errors } } = useForm<PostInputs>({
     resolver: yupResolver(schema),
   });
@@ -37,7 +37,7 @@ export const PostHost = () => {
 
   return (
     <div className="post_host_container">
-      <Header />
+      <HostHeader />
       <div className="post_host_content">
         <h1 className="post_host_title">Make a post</h1>
         <form className="post_host_form" onSubmit={handleSubmit(onSubmit)}>

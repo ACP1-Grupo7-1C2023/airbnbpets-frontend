@@ -1,9 +1,10 @@
 import { AnyAction, Reducer } from 'redux';
+import { UserType } from '../../interfaces/AppInterfaces';
 
 export type Session = {
   token: string;
   email: string;
-  type: 'petSitter' | 'host';
+  type: UserType;
 }
 
 export type AuthState = {

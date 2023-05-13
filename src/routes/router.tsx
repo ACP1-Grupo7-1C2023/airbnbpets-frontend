@@ -2,8 +2,9 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "../screens/public/Login";
 import { Signup } from "../screens/public/Signup";
 import { useAppSelector } from "../state";
-import { SitterHome } from "../screens/sitter/Home";
-import { HostHome } from "../screens/host/Home";
+import { UserType } from "../interfaces/AppInterfaces";
+import { PostList } from "../screens/sitter/PostList";
+import { MyPosts } from "../screens/host/MyPosts";
 
 export const AppRouter = () => {
   const session = useAppSelector(auth => auth.auth.session);
@@ -12,15 +13,15 @@ export const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         {session ? (
-          session.type === 'petSitter' ? (
+          session.type === UserType.Sitter ? (
             <>
-              <Route path="/home" element={<SitterHome />} />
-              <Route path="*" element={<Navigate replace to="/home" />} />
+              <Route path="/posts" element={<PostList />} />
+              <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           ) : (
             <>
-              <Route path="/home" element={<HostHome />} />
-              <Route path="*" element={<Navigate replace to="/home" />} />
+              <Route path="/posts" element={<MyPosts />} />
+              <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           )
         ) : (
