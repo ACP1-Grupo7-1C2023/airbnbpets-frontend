@@ -8,7 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 function App() {
   return (
     <div>
-      <ChakraProvider>
+      <ChakraProvider toastOptions={{ defaultOptions: { position: 'bottom-left', variant: 'subtle', duration: 5000 } }}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <AppRouter />

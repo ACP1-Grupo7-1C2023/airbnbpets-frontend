@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
 import { Post } from "../../interfaces/AppInterfaces";
 import { PostItem } from "../../components/PostItem";
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Text, useToast } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { NewPostModal } from "../../components/NewPostModal";
@@ -53,6 +53,7 @@ const data: Post[] = [
 
 export const MyPosts = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const toast = useToast();
 
   const onPostClick = () => {
     setModalVisible(true);

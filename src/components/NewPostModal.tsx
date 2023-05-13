@@ -3,8 +3,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
-import { useState } from "react";
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from '@chakra-ui/react';
+import { useEffect, useState } from "react";
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
+import api from "../api";
+import { useAppSelector } from "../state";
 
 type PostInputs = {
   title: string;
@@ -23,15 +25,41 @@ const schema = yup.object().shape({
 });
 
 export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<PostInputs>({
+  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<PostInputs>({
     resolver: yupResolver(schema),
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const toast = useToast();
+  const session = useAppSelector(state => state.auth.session);
 
   const onSubmit = async (data: PostInputs) => {
-    console.log(data);
-  }
+    setLoading(true);
+    if (!session) {
+      setError('You must be logged in to post');
+      setLoading(false);
+      return;
+    }
+    try {
+      const startAt = new Date(data.startAt).toISOString().split('T')[0];
+      const finishAt = new Date(data.finishAt).toISOString().split('T')[0];
+      await api.post('/posts', {
+        userEmail: session.email,
+        userType: session.type,
+        ...data,
+        startAt,
+        finishAt
+      });
+      reset();
+      setLoading(false);
+      toast({ title: 'Post created successfully!', status: 'success' });
+      onClose();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError('An error occurred while posting');
+    }
+  };
 
   return (
     <Modal isCentered onClose={onClose} size="3xl" isOpen={isOpen}>
