@@ -10,40 +10,40 @@ const data: Post[] = [
     title: "departamento en palermo",
     description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
     location: "CABA",
-    startAt: "2023-06-10",
-    finishAt: "2023-06-10"
+    startAt: "2023-06-10T00:00:00.000Z",
+    finishAt: "2023-06-10T00:00:00.000Z"
   },
   {
     id: 2,
     title: "departamento en palermo",
     description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
     location: "CABA",
-    startAt: "2023-06-10",
-    finishAt: "2023-06-10"
+    startAt: "2023-06-10T00:00:00.000Z",
+    finishAt: "2023-06-10T00:00:00.000Z"
   },
   {
     id: 3,
     title: "departamento en palermo",
     description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
     location: "CABA",
-    startAt: "2023-06-10",
-    finishAt: "2023-06-10"
+    startAt: "2023-06-10T00:00:00.000Z",
+    finishAt: "2023-06-10T00:00:00.000Z"
   },
   {
     id: 4,
     title: "departamento en palermo",
     description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
     location: "CABA",
-    startAt: "2023-06-10",
-    finishAt: "2023-06-10"
+    startAt: "2023-06-10T00:00:00.000Z",
+    finishAt: "2023-06-10T00:00:00.000Z"
   },
   {
     id: 5,
     title: "departamento en palermo",
     description: "el lugar es un departamento 3 ambientes y las mascotas dos gatos",
     location: "CABA",
-    startAt: "2023-06-10",
-    finishAt: "2023-06-10"
+    startAt: "2023-06-10T00:00:00.000Z",
+    finishAt: "2023-06-10T00:00:00.000Z"
   }
 ]
 
@@ -54,7 +54,7 @@ export const PostList = () => {
       <div className="post_list_container">
         {data.length === 0 && (
           <div className="post_empty">
-            <Text fontSize='lg' colorScheme='grey'>You haven't made any posts yet</Text>
+            <Text fontSize='lg' colorScheme='grey'>There aren't any posts yet</Text>
           </div>
         )}
         {data.map((post) => (
