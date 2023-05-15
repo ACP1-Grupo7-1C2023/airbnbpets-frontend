@@ -20,7 +20,8 @@ export const login = (email: string, password: string, type: UserType) => async 
     if (axios.isAxiosError(e)) {
       throw e.response?.data ?? 'Unexpected error occurred';
     }
-    throw 'Unexpected error occurred';
+    const err = "Unexpected error occurred";
+    throw err;
   }
 }
 
@@ -37,6 +38,7 @@ export const signup = (name: string, lastName: string, email: string, password: 
     if (axios.isAxiosError(e)) {
       throw e.response?.data ?? 'Unexpected error occurred';
     }
-    throw 'Unexpected error occurred';
+    const err = "Unexpected error occurred";
+    throw err;
   }
 }

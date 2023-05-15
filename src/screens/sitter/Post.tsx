@@ -1,10 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AspectRatio, Button, Card, CardBody, CardFooter, Center, Container, Divider, Flex, HStack, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
+import { AspectRatio, Button, Card, CardBody, CardFooter, Container, Divider, Flex, HStack, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
 import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
 import { parseDate } from "../../utils/date";
 import api from "../../api";
+import { useAppDispatch, useAppSelector } from "../../state";
+import { logout } from "../../state/actions";
+import { ErrorAlert } from "../../components/ErrorAlert";
 
 type Post = {
   id: number;
@@ -22,8 +25,10 @@ export const SitterPost = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post>();
   const navigate = useNavigate();
-  const cancelRef = useRef(null)
+  const dispatch = useAppDispatch();
   const [error, setError] = useState('');
+  const session = useAppSelector(state => state.auth.session);
+  const toast = useToast();
   const pets = [{
     id: 1,
     name: "Luna",
@@ -33,63 +38,91 @@ export const SitterPost = () => {
     name: "Michi",
     image: "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/OF3SZKCXHZADLOGT3V5KFAXG4E.png"
   }];
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getPosts = async () => {
-      const post = await api.get(`/posts/${id}`);
-      if (!post.data) {
-        setError('No se encontró el post');
-        return;
+      try {
+        const post = await api.get(`/posts/${id}`);
+        setPost(post.data);
+      } catch (error: any) {
+        console.log(error);
+        if (error?.code && error.code === 401) {
+          dispatch(logout());
+        } else {
+          setError(error.response.data.detail ?? 'Something went wrong, try again later');
+        }
       }
-      setPost(post.data);
     };
     getPosts();
-  }, [id]);
+  }, [id, dispatch]);
+
+  const apply = async () => {
+    try {
+      setLoading(true);
+      await api.post("/apply", {
+        "postId": id,
+        "userEmail": session?.email,
+        "userType": session?.type,
+      }, {
+        headers: {
+          Authorization: `Bearer ${session?.token}`
+        }
+      });
+      toast({
+        title: "Applied successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setLoading(false);
+    } catch (error: any) {
+      console.log(error);
+      setLoading(false);
+      if (error?.code && error.code === 401) {
+        dispatch(logout());
+      } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
+        toast({
+          title: "You already applied to this post",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: "Something went wrong, try again later",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    }
+  }
 
   if (!post) {
     return (
       <div>
         <SitterHeader />
-        <Center>
-          <AlertDialog
-            isOpen={error !== ''}
-            leastDestructiveRef={cancelRef}
-            onClose={() => { navigate('/posts'); }}
-            isCentered
-          >
-            <AlertDialogOverlay>
-              <AlertDialogContent>
-                <AlertDialogHeader fontSize='2xl' fontWeight='bold'>
-                  {error}
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <Button ref={cancelRef}  onClick={() => { navigate('/posts'); }}>
-                    Volver a la lista
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialogOverlay>
-          </AlertDialog>
-        </Center>
+        <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
         <VStack mt="50px" ml="50px" mr="50px" mb="50px">
           <Container maxW='md'>
-          <Skeleton height="200px" />
-        </Container>
-        <Container maxW='md'>
-          <SkeletonText noOfLines={1} skeletonHeight={8}/>
-          <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
-        </Container>
-        <Flex direction='row' align='center' gap={2}>
-          <Icon as={MdLocationPin} />
-          <SkeletonText w="100px" noOfLines={1} skeletonHeight={2} />
-        </Flex>
-        <Flex direction='row' align='center' gap={2}>
-          <Icon as={MdCalendarMonth} />
-          <Text>
-            <SkeletonText w="200px" noOfLines={1} skeletonHeight={2} />
-          </Text>
-        </Flex>
-      </VStack>
+            <Skeleton height="200px" />
+          </Container>
+          <Container maxW='md'>
+            <SkeletonText noOfLines={1} skeletonHeight={8} />
+            <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
+          </Container>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdLocationPin} />
+            <SkeletonText w="100px" noOfLines={1} skeletonHeight={2} />
+          </Flex>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdCalendarMonth} />
+            <Text>
+              <SkeletonText w="200px" noOfLines={1} skeletonHeight={2} />
+            </Text>
+          </Flex>
+        </VStack>
       </div>
     )
   }
@@ -97,6 +130,7 @@ export const SitterPost = () => {
   return (
     <div>
       <SitterHeader />
+      <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
       <VStack mt="50px" ml="50px" mr="50px" mb="50px">
         <Container maxW='md'>
           <Image
@@ -119,7 +153,7 @@ export const SitterPost = () => {
           </Text>
         </Flex>
         <Divider orientation="horizontal" />
-        <Heading size="md">Mascotas</Heading>
+        <Heading size="md">Pets</Heading>
         <HStack>
           {pets.map((pet: any) => (
             <Card>
@@ -138,6 +172,14 @@ export const SitterPost = () => {
               </CardFooter>
             </Card>
           ))}
+        </HStack>
+        <HStack>
+          <Button colorScheme="red" size="lg" onClick={() => { navigate('/posts'); }}>
+            Go back
+          </Button>
+          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply}>
+            Apply
+          </Button>
         </HStack>
       </VStack>
     </div>

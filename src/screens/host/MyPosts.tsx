@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
 import { Post } from "../../interfaces/AppInterfaces";
 import { PostItem } from "../../components/PostItem";
-import { Flex, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
 import { NewPostModal } from "../../components/NewPostModal";
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
-import { MdWarning } from 'react-icons/md';
 import { ShowError } from "../../components/ShowError";
 
 export const MyPosts = () => {
@@ -29,29 +28,28 @@ export const MyPosts = () => {
     setModalVisible(false);
   }
 
-  const getMyPosts = async () => {
-    setLoading(true);
-    if (!session) {
-      setError('You must be logged in to view your posts');
-      setLoading(false);
-      return;
-    }
-    try {
-      const response = await api.get<Post[]>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` }});
-      setPosts(response.data);
-      setLoading(false);
-    } catch (error: any) {
-      if (error?.code && error.code === 401) {
-        dispatch(logout());
-      }
-      setError('Something went wrong, try again later');
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
+    const getMyPosts = async () => {
+      setLoading(true);
+      if (!session) {
+        setError('You must be logged in to view your posts');
+        setLoading(false);
+        return;
+      }
+      try {
+        const response = await api.get<Post[]>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` } });
+        setPosts(response.data);
+        setLoading(false);
+      } catch (error: any) {
+        if (error?.code && error.code === 401) {
+          dispatch(logout());
+        }
+        setError('Something went wrong, try again later');
+        setLoading(false);
+      }
+    }
     getMyPosts();
-  }, []);
+  }, [session, dispatch]);
 
   if (loading) {
     return (
