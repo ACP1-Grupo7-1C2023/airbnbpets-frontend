@@ -1,25 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { AspectRatio, Button, Card, CardBody, CardFooter, Container, Divider, Flex, HStack, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
+import { Accordion, Button, Container, Flex, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
 import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
 import { parseDate } from "../../utils/date";
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
-
-type Post = {
-  id: number;
-  useremail: string;
-  usertype: string;
-  title: string;
-  description: string;
-  location: string;
-  startat: string;
-  finishat: string;
-  image: string;
-}
+import { Post } from "../../interfaces/AppInterfaces";
+import { PetsSection } from "../../components/post/PetsSection";
 
 export const SitterPost = () => {
   const { id } = useParams();
@@ -134,7 +124,7 @@ export const SitterPost = () => {
       <VStack mt="50px" ml="50px" mr="50px" mb="50px">
         <Container maxW='md'>
           <Image
-            src={post.image}
+            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
             borderRadius='lg'
           />
         </Container>
@@ -152,36 +142,18 @@ export const SitterPost = () => {
             {parseDate(post.startat)} - {parseDate(post.finishat)}
           </Text>
         </Flex>
-        <Divider orientation="horizontal" />
-        <Heading size="md">Pets</Heading>
-        <HStack>
-          {pets.map((pet: any) => (
-            <Card>
-              <CardBody>
-                <AspectRatio w="250px" ratio={1}>
-                  <Image
-                    src={pet.image}
-                    borderRadius='lg'
-                  />
-                </AspectRatio>
-              </CardBody>
-              <CardFooter>
-                <Heading size="md" >
-                  {pet.name}
-                </Heading>
-              </CardFooter>
-            </Card>
-          ))}
-        </HStack>
-        <HStack>
-          <Button colorScheme="red" size="lg" onClick={() => { navigate('/posts'); }}>
-            Go back
-          </Button>
-          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply}>
-            Apply
-          </Button>
-        </HStack>
       </VStack>
+      <Accordion defaultIndex={[0]} allowMultiple>
+        <PetsSection pets={pets} />
+      </Accordion>
+      <Flex p={4} justifyContent="center" gap={4}>
+        <Button colorScheme="red" size="lg" onClick={() => { navigate('/posts'); }}>
+          Go back
+        </Button>
+        <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply}>
+          Apply
+        </Button>
+      </Flex>
     </div>
   );
 }

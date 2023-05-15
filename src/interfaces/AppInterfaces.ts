@@ -11,3 +11,9 @@ export interface Post {
   startat: string;
   finishat: string;
 }
+
+export interface Applications {
+  name: string;
+  lastname: string;
+  email: string;
+}
