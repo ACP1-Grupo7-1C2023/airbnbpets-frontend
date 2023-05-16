@@ -40,13 +40,15 @@ export const MyPosts = () => {
         setPosts(response.data);
         setLoading(false);
       } catch (error: any) {
-        if (error?.code && error.code === 401) {
+        if (error?.response && error.response.data.code === 401) {
           dispatch(logout());
+        } else {
+          setError(error.response.data.detail ?? 'Something went wrong, try again later');
+          setLoading(false);
         }
-        setError('Something went wrong, try again later');
-        setLoading(false);
       }
     }
+
     getMyPosts();
   }, [session, dispatch]);
 

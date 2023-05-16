@@ -25,24 +25,22 @@ export const HostPost = () => {
     const getPosts = async () => {
       try {
         const post = await api.get(`/posts/${id}`);
-        console.log(post);
         setPost(post.data);
       } catch (error: any) {
-        console.log(error);
-        if (error?.code && error.code === 401) {
+        if (error?.response && error.response.data.code === 401) {
           dispatch(logout());
         } else {
           setError(error.response.data.detail ?? 'Something went wrong, try again later');
         }
       }
     };
+
     const getApplicants = async () => {
       try {
         const applicants = await api.get(`/applications/${id}`);
         setApplicants(applicants.data);
       } catch (error: any) {
-        console.log(error);
-        if (error?.code && error.code === 401) {
+        if (error?.response && error.response.data.code === 401) {
           dispatch(logout());
         } else {
           setError(error.response.data.detail ?? 'Something went wrong, try again later');

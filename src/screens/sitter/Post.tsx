@@ -28,8 +28,7 @@ export const SitterPost = () => {
         const post = await api.get(`/posts/${id}`);
         setPost(post.data);
       } catch (error: any) {
-        console.log(error);
-        if (error?.code && error.code === 401) {
+        if (error?.response && error.response.data.code === 401) {
           dispatch(logout());
         } else {
           setError(error.response.data.detail ?? 'Something went wrong, try again later');
@@ -51,32 +50,16 @@ export const SitterPost = () => {
           Authorization: `Bearer ${session?.token}`
         }
       });
-      toast({
-        title: "Applied successfully",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
+      toast({ title: "Applied successfully", status: "success" });
       setLoading(false);
     } catch (error: any) {
-      console.log(error);
       setLoading(false);
-      if (error?.code && error.code === 401) {
+      if (error?.response && error.response.data.code === 401) {
         dispatch(logout());
       } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
-        toast({
-          title: "You already applied to this post",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+        toast({ title: "You already applied to this post", status: "error" });
       } else {
-        toast({
-          title: "Something went wrong, try again later",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+        toast({ title: "Something went wrong, try again later", status: "error" });
       }
     }
   }
