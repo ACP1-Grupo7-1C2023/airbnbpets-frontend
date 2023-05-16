@@ -22,6 +22,7 @@ export const SitterPost = () => {
   const session = useAppSelector(state => state.auth.session);
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const [applied, setApplied] = useState(false);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -52,6 +53,7 @@ export const SitterPost = () => {
         }
       });
       toast({ title: "Applied successfully", status: "success" });
+      setApplied(true);
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -124,8 +126,8 @@ export const SitterPost = () => {
           <PetsSection pets={post.petUrls} />
         </Accordion>
         <Flex p={4} justifyContent="center" gap={4}>
-          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply}>
-            Apply
+          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
+            {applied ? 'Applied' : 'Apply'}
           </Button>
         </Flex>
       </Card>
