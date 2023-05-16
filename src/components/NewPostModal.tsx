@@ -26,7 +26,7 @@ const schema = yup.object().shape({
   finishAt: yup.date().required('Finish date is required')
 });
 
-export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, onClose: () => void, onSuccess: () => void }) => {
   const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<PostInputs>({
     resolver: yupResolver(schema),
   });
@@ -75,11 +75,11 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
         }
       });
       reset();
+      onSuccess();
       setLoading(false);
       toast({ title: 'Post created successfully!', status: 'success' });
       onClose();
     } catch (error: any) {
-      console.log(error);
       if (error?.response?.status === 401) {
         dispatch(logout());
       } else {

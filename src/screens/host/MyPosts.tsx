@@ -27,28 +27,28 @@ export const MyPosts = () => {
     setModalVisible(false);
   }
 
-  useEffect(() => {
-    const getMyPosts = async () => {
-      setLoading(true);
-      if (!session) {
-        setError('You must be logged in to view your posts');
+  const getMyPosts = async () => {
+    setLoading(true);
+    if (!session) {
+      setError('You must be logged in to view your posts');
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await api.get<PostsList>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` } });
+      setPosts(response.data);
+      setLoading(false);
+    } catch (error: any) {
+      if (error?.response && error.response.data.code === 401) {
+        dispatch(logout());
+      } else {
+        setError(error.response.data.detail ?? 'Something went wrong, try again later');
         setLoading(false);
-        return;
-      }
-      try {
-        const response = await api.get<PostsList>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` } });
-        setPosts(response.data);
-        setLoading(false);
-      } catch (error: any) {
-        if (error?.response && error.response.data.code === 401) {
-          dispatch(logout());
-        } else {
-          setError(error.response.data.detail ?? 'Something went wrong, try again later');
-          setLoading(false);
-        }
       }
     }
+  }
 
+  useEffect(() => {
     getMyPosts();
   }, [session, dispatch]);
 
@@ -99,7 +99,7 @@ export const MyPosts = () => {
           </Text>
         </Flex>
       </button>
-      <NewPostModal isOpen={modalVisible} onClose={onModalClose} />
+      <NewPostModal isOpen={modalVisible} onClose={onModalClose} onSuccess={getMyPosts} />
     </div>
   );
 }
