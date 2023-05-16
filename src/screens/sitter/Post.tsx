@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { Accordion, Button, Container, Flex, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
+import { Accordion, Button, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
 import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
 import { parseDate } from "../../utils/date";
 import api from "../../api";
@@ -10,6 +10,7 @@ import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
 import { Post } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
+import { ImagesGallery } from "../../components/ImagesGallery";
 
 export const SitterPost = () => {
   const { id } = useParams();
@@ -19,15 +20,6 @@ export const SitterPost = () => {
   const [error, setError] = useState('');
   const session = useAppSelector(state => state.auth.session);
   const toast = useToast();
-  const pets = [{
-    id: 1,
-    name: "Luna",
-    image: "https://estaticos-cdn.prensaiberica.es/clip/823f515c-8143-4044-8f13-85ea1ef58f3a_16-9-discover-aspect-ratio_default_0.jpg"
-  }, {
-    id: 2,
-    name: "Michi",
-    image: "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/OF3SZKCXHZADLOGT3V5KFAXG4E.png"
-  }];
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -123,10 +115,7 @@ export const SitterPost = () => {
       <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
       <VStack mt="50px" ml="50px" mr="50px" mb="50px">
         <Container maxW='md'>
-          <Image
-            src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-            borderRadius='lg'
-          />
+          <ImagesGallery images={post.homeUrls} />
         </Container>
         <Heading size="lg">{post.title}</Heading>
         <Text>{post.description}</Text>
@@ -144,7 +133,7 @@ export const SitterPost = () => {
         </Flex>
       </VStack>
       <Accordion defaultIndex={[0]} allowMultiple>
-        <PetsSection pets={pets} />
+        <PetsSection pets={post.petUrls} />
       </Accordion>
       <Flex p={4} justifyContent="center" gap={4}>
         <Button colorScheme="red" size="lg" onClick={() => { navigate('/posts'); }}>

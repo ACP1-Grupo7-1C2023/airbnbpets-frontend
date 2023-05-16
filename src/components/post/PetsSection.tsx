@@ -1,7 +1,7 @@
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, AspectRatio, Card, CardBody, CardFooter, Heading, Image, Wrap, WrapItem } from "@chakra-ui/react"
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Heading, Image, Wrap } from "@chakra-ui/react"
 
 type PetsSectionProps = {
-  pets: any[]
+  pets: string[]
 }
 
 export const PetsSection = ({ pets }: PetsSectionProps) => {
@@ -16,23 +16,12 @@ export const PetsSection = ({ pets }: PetsSectionProps) => {
       <AccordionPanel pb={4}>
         <Wrap justify="center" spacing={8}>
           {pets.map((pet: any) => (
-            <WrapItem>
-              <Card>
-                <CardBody>
-                  <AspectRatio w="250px" ratio={1}>
-                    <Image
-                      src={pet.image}
-                      borderRadius='lg'
-                    />
-                  </AspectRatio>
-                </CardBody>
-                <CardFooter>
-                  <Heading size="md" >
-                    {pet.name}
-                  </Heading>
-                </CardFooter>
-              </Card>
-            </WrapItem>
+            <Image
+              src={pet}
+              borderRadius='lg'
+              objectFit="cover"
+              boxSize="250px"
+            />
           ))}
         </Wrap>
       </AccordionPanel>

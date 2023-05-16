@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { HostHeader } from "../../components/header/HostHeader";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../state";
-import { Accordion, Container, Flex, Heading, Icon, Image, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
+import { Accordion, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
 import api from "../../api";
 import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
@@ -11,6 +11,7 @@ import { parseDate } from "../../utils/date";
 import { Applications, Post } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
 import { ApplicationsSection } from "../../components/post/ApplicationsSection";
+import { ImagesGallery } from "../../components/ImagesGallery";
 
 export const HostPost = () => {
   const { id } = useParams();
@@ -19,20 +20,12 @@ export const HostPost = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [error, setError] = useState('');
-  const pets = [{
-    id: 1,
-    name: "Luna",
-    image: "https://estaticos-cdn.prensaiberica.es/clip/823f515c-8143-4044-8f13-85ea1ef58f3a_16-9-discover-aspect-ratio_default_0.jpg"
-  }, {
-    id: 2,
-    name: "Michi",
-    image: "https://cloudfront-us-east-1.images.arcpublishing.com/infobae/OF3SZKCXHZADLOGT3V5KFAXG4E.png"
-  }];
 
   useEffect(() => {
     const getPosts = async () => {
       try {
         const post = await api.get(`/posts/${id}`);
+        console.log(post);
         setPost(post.data);
       } catch (error: any) {
         console.log(error);
@@ -94,10 +87,7 @@ export const HostPost = () => {
       <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
       <VStack mt="50px" ml="50px" mr="50px" mb="50px">
         <Container maxW='md'>
-          <Image
-            src={"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"}
-            borderRadius='lg'
-          />
+          <ImagesGallery images={post.homeUrls} />
         </Container>
         <Heading size="lg">{post.title}</Heading>
         <Text>{post.description}</Text>
@@ -115,7 +105,7 @@ export const HostPost = () => {
         </Flex>
       </VStack>
       <Accordion defaultIndex={[0, 1]} allowMultiple>
-        <PetsSection pets={pets} />
+        <PetsSection pets={post.petUrls} />
         <ApplicationsSection applicants={applicants} />
       </Accordion>
     </div>

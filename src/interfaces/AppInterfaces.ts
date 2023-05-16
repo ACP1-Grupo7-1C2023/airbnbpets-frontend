@@ -10,6 +10,8 @@ export interface Post {
   location: string;
   startat: string;
   finishat: string;
+  homeUrls: string[];
+  petUrls: string[]
 }
 
 export interface Applications {
