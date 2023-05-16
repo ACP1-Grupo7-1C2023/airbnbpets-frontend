@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { HostHeader } from "../../components/header/HostHeader";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../state";
-import { Accordion, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
+import { Accordion, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
 import api from "../../api";
 import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
@@ -12,6 +12,7 @@ import { Applications, Post } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
 import { ApplicationsSection } from "../../components/post/ApplicationsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
+import { FaArrowLeft } from "react-icons/fa";
 
 export const HostPost = () => {
   const { id } = useParams();
@@ -80,32 +81,37 @@ export const HostPost = () => {
   }
 
   return (
-    <div>
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <HostHeader />
       <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
-      <VStack mt="50px" ml="50px" mr="50px" mb="50px">
-        <Container maxW='md'>
-          <ImagesGallery images={post.homeUrls} />
-        </Container>
-        <Heading size="lg">{post.title}</Heading>
-        <Text>{post.description}</Text>
-        <Flex direction='row' align='center' gap={2}>
-          <Icon as={MdLocationPin} />
-          <Text>
-            {post.location}
-          </Text>
-        </Flex>
-        <Flex direction='row' align='center' gap={2}>
-          <Icon as={MdCalendarMonth} />
-          <Text>
-            {parseDate(post.startAt)} - {parseDate(post.finishAt)}
-          </Text>
-        </Flex>
-      </VStack>
-      <Accordion defaultIndex={[0, 1]} allowMultiple>
-        <PetsSection pets={post.petUrls} />
-        <ApplicationsSection applicants={applicants} />
-      </Accordion>
+      <Card w="1000px" my={6}>
+        <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate('/posts'); }}>
+          <Icon as={FaArrowLeft} />
+        </button>
+        <VStack mt="50px" ml="50px" mr="50px" mb="50px">
+          <Container maxW='md'>
+            <ImagesGallery images={post.homeUrls} />
+          </Container>
+          <Heading size="lg">{post.title}</Heading>
+          <Text>{post.description}</Text>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdLocationPin} />
+            <Text>
+              {post.location}
+            </Text>
+          </Flex>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdCalendarMonth} />
+            <Text>
+              {parseDate(post.startAt)} - {parseDate(post.finishAt)}
+            </Text>
+          </Flex>
+        </VStack>
+        <Accordion defaultIndex={[0, 1]} allowMultiple>
+          <PetsSection pets={post.petUrls} />
+          <ApplicationsSection applicants={applicants} />
+        </Accordion>
+      </Card>
     </div>
   );
 }
