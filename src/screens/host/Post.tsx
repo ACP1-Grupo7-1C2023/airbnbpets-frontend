@@ -100,7 +100,7 @@ export const HostPost = () => {
         <Flex direction='row' align='center' gap={2}>
           <Icon as={MdCalendarMonth} />
           <Text>
-            {parseDate(post.startat)} - {parseDate(post.finishat)}
+            {parseDate(post.startAt)} - {parseDate(post.finishAt)}
           </Text>
         </Flex>
       </VStack>

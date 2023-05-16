@@ -36,8 +36,8 @@ export const Login = () => {
     try {
       await dispatch(login(data.email, data.password, type));
     } catch (error: any) {
-      if (error?.code && error.code === 404) {
-        setError('Incorrect email or password');
+      if (error?.detail) {
+        setError('An error ocurred, ' + error.detail);
       } else {
         setError('Something went wrong, try again later');
       }

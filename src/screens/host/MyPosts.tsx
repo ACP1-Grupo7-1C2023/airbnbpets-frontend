@@ -1,8 +1,7 @@
 import "../../styles/Post.scss";
 import { useEffect, useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
-import { Post } from "../../interfaces/AppInterfaces";
-import { PostItem } from "../../components/PostItem";
+import { PostItem, PostsList } from "../../components/PostItem";
 import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
@@ -13,7 +12,7 @@ import { logout } from "../../state/actions";
 import { ShowError } from "../../components/ShowError";
 
 export const MyPosts = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostsList>([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [error, setError] = useState('');
@@ -37,7 +36,7 @@ export const MyPosts = () => {
         return;
       }
       try {
-        const response = await api.get<Post[]>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` } });
+        const response = await api.get<PostsList>('/my-posts', { headers: { Authorization: `Bearer ${session.token}` } });
         setPosts(response.data);
         setLoading(false);
       } catch (error: any) {

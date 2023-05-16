@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import { Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
-import { PostItem } from "../../components/PostItem";
-import { Post } from "../../interfaces/AppInterfaces";
+import { PostItem, PostsList } from "../../components/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 
 export const PostList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostsList>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const getPosts = async () => {
     setLoading(true);
     try {
-      const response = await api.get<Post[]>('/posts');
+      const response = await api.get<PostsList>('/posts');
       setPosts(response.data);
       setLoading(false);
     } catch (error: any) {

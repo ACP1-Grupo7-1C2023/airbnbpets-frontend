@@ -1,9 +1,19 @@
 import { Card, CardBody, CardHeader, Flex, Heading, Text } from "@chakra-ui/react";
-import { Post } from "../interfaces/AppInterfaces";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../utils/date";
 import { useNavigate } from "react-router-dom";
+
+export type PostsList = Post[];
+
+interface Post {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  startat: string;
+  finishat: string;
+}
 
 export const PostItem = ({ post }: { post: Post }) => {
   const navigate = useNavigate();

@@ -8,8 +8,8 @@ export interface Post {
   title: string;
   description: string;
   location: string;
-  startat: string;
-  finishat: string;
+  startAt: string;
+  finishAt: string;
   homeUrls: string[];
   petUrls: string[]
 }
