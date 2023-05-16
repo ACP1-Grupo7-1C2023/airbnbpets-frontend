@@ -4,9 +4,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useState } from "react";
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
+import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
 import api from "../api";
-import { useAppSelector } from "../state";
+import { useAppDispatch, useAppSelector } from "../state";
+import { ImagesPicker } from "./ImagesPicker";
+import { logout } from "../state/actions";
 
 type PostInputs = {
   title: string;
@@ -28,10 +30,19 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
   const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<PostInputs>({
     resolver: yupResolver(schema),
   });
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const toast = useToast();
   const session = useAppSelector(state => state.auth.session);
+  const [homeImages, setHomeImages] = useState<{ images: any[], previews: string[] }>({
+    images: [],
+    previews: []
+  });
+  const [petsImages, setPetsImages] = useState<{ images: any[], previews: string[] }>({
+    images: [],
+    previews: []
+  });
 
   const onSubmit = async (data: PostInputs) => {
     setLoading(true);
@@ -43,22 +54,55 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
     try {
       const startAt = new Date(data.startAt).toISOString().split('T')[0];
       const finishAt = new Date(data.finishAt).toISOString().split('T')[0];
-      await api.post('/posts', {
-        userEmail: session.email,
-        userType: session.type,
-        ...data,
-        startAt,
-        finishAt
+      const formData = new FormData();
+      for (let i = 0; i < homeImages.images.length; i++) {
+        formData.append('home', homeImages.images[i]);
+      }
+      for (let i = 0; i < petsImages.images.length; i++) {
+        formData.append('pet', petsImages.images[i]);
+      }
+      formData.append('hostEmail', session.email);
+      formData.append('hostType', session.type);
+      formData.append('title', data.title);
+      formData.append('description', data.description);
+      formData.append('location', data.location);
+      formData.append('startAt', startAt);
+      formData.append('finishAt', finishAt);
+      await api.post('/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${session.token}`
+        }
       });
       reset();
       setLoading(false);
       toast({ title: 'Post created successfully!', status: 'success' });
       onClose();
-    } catch (error) {
-      setLoading(false);
-      setError('Something went wrong, try again later');
+    } catch (error: any) {
+      console.log(error);
+      if (error?.response?.status === 401) {
+        dispatch(logout());
+      } else {
+        setLoading(false);
+        setError('Something went wrong, try again later');
+      }
     }
   };
+
+  const selectImages = async (e: any, type: 'home' | 'pets') => {
+    let urls = []
+    for (let i = 0; i < e.target.files.length; i++) {
+      urls.push(URL.createObjectURL(e.target.files[i]));
+    }
+    if (type === 'pets') setPetsImages({
+      images: e.target.files,
+      previews: urls
+    })
+    else setHomeImages({
+        images: e.target.files,
+        previews: urls
+      })
+  }
 
   return (
     <Modal isCentered onClose={onClose} size="3xl" isOpen={isOpen}>
@@ -66,8 +110,9 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
         <ModalContent>
           <ModalHeader>New Post</ModalHeader>
           <ModalCloseButton disabled={loading} />
-          <ModalBody>
+          <ModalBody mt={8} mb={8}>
             <form className="post_form" onSubmit={(e) => { e.preventDefault() }}>
+              <ImagesPicker images={homeImages?.previews} onChanges={(e) => {selectImages(e, "home")}} />
               <Text ml={1} color="#535657">Title</Text>
               <div className={errors.title ? "login-form-item-error" : "login-form-item"}>
                 <input
@@ -124,7 +169,8 @@ export const NewPostModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: ()
                 />
               </div>
               {errors.finishAt && <p className="login-form-input-error">{errors.finishAt.message}</p>}
-
+            <Heading size="md" mt={5} mb={2}>Pets</Heading>
+            <ImagesPicker images={petsImages?.previews} onChanges={(e) => { selectImages(e, "pets") }} />
             </form>
             {error && <p className="login-error">{error}</p>}
           </ModalBody>
