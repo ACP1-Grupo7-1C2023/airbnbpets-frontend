@@ -109,7 +109,7 @@ export const HostPost = () => {
         </VStack>
         <Accordion defaultIndex={[0, 1]} allowMultiple>
           <PetsSection pets={post.petUrls} />
-          <ApplicationsSection applicants={applicants} />
+          <ApplicationsSection applicants={applicants} postId={post.id} />
         </Accordion>
       </Card>
     </div>

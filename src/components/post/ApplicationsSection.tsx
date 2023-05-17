@@ -1,12 +1,40 @@
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Flex, Heading, Icon, Spacer, Text, VStack } from "@chakra-ui/react";
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Flex, Heading, Icon, Spacer, Text, VStack, useToast } from "@chakra-ui/react";
 import { Applications } from "../../interfaces/AppInterfaces";
 import { MdStar, MdStarBorder } from "react-icons/md";
+import api from "../../api";
+import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../state";
+import { logout } from "../../state/actions";
 
 type ApplicationsSectionProps = {
-  applicants: Applications[]
+  applicants: Applications[];
+  postId: number;
 }
 
-export const ApplicationsSection = ({ applicants }: ApplicationsSectionProps) => {
+export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionProps) => {
+  const session = useAppSelector(state => state.auth.session);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const dispatch = useAppDispatch();
+
+  const onSelect = async (applicant: Applications) => {
+    setLoading(true);
+    try {
+      await api.post('/accept', { postId, applicantEmail: applicant.email }, { headers: {
+        Authorization: `Bearer ${session?.token}`
+      }});
+      toast({ title: 'Applicant selected successfully!', status: 'success' });
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      if (error?.response && error.response.data.code === 401) {
+        dispatch(logout());
+      } else {
+        toast({ title: "Something went wrong, try again later", status: "error" });
+      }
+    }
+  }
+
   return (
     <AccordionItem>
       <h1>
@@ -39,7 +67,14 @@ export const ApplicationsSection = ({ applicants }: ApplicationsSectionProps) =>
                     />
                   ))}
                 <Spacer />
-                <Button colorScheme="teal" size="sm" onClick={() => { }}>Select</Button>
+                <Button
+                  colorScheme="teal"
+                  size="sm"
+                  onClick={() => { onSelect(applicant) }}
+                  isLoading={loading}
+                >
+                  Select
+                </Button>
               </Flex>
             ))
           }
