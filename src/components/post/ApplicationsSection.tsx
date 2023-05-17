@@ -47,7 +47,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
         <VStack>
           {
             applicants.map((applicant: Applications) => (
-              <Flex width="75%" alignItems="center">
+              <Flex width="75%" alignItems="center" key={applicant.email}>
                 <Text mr={4}>{`${applicant.name} ${applicant.lastname}`}</Text>
                 {Array(3)
                   .fill('')
@@ -63,6 +63,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
                   .map((_, i) => (
                     <Icon
                       as={MdStarBorder}
+                      key={i}
                       color='teal.500'
                     />
                   ))}

@@ -15,8 +15,9 @@ export const PetsSection = ({ pets }: PetsSectionProps) => {
       </h1>
       <AccordionPanel pb={4}>
         <Wrap justify="center" spacing={8}>
-          {pets.map((pet: any) => (
+          {pets.map((pet, index) => (
             <Image
+              key={`pet-${index}-${pet}`}
               src={pet}
               borderRadius='lg'
               objectFit="cover"
