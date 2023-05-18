@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
 import { PostItem, PostsList } from "../../components/PostItem";
@@ -7,12 +7,29 @@ import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 import { useAppDispatch } from "../../state";
 import { logout } from "../../state/actions";
+import "../../styles/Search.scss"
+
+type Filters = {
+  location: string;
+  startAt: string;
+  finishAt: string;
+}
 
 export const PostList = () => {
   const [posts, setPosts] = useState<PostsList>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const dispatch = useAppDispatch();
+  const [filters, setFilters] = useState<Filters>({
+    location: '',
+    startAt: '',
+    finishAt: ''
+  });
+  const [currentFilters, setCurrentFilters] = useState<Filters>({
+    location: '',
+    startAt: '',
+    finishAt: ''
+  });
 
   useEffect(() => {
     const getPosts = async () => {
@@ -32,13 +49,38 @@ export const PostList = () => {
     }
 
     getPosts();
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
     return (
       <div className="post_container">
         <SitterHeader />
         <div className="post_list_container">
+          <Flex
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb="4"
+            gap="4"
+            borderRadius="16"
+            p="8"
+            bg="#ffffff"
+            shadow="sm"
+          >
+            <FormControl isDisabled>
+              <FormLabel>Start Date</FormLabel>
+              <Input type="date"/>
+            </FormControl>
+            <FormControl isDisabled>
+              <FormLabel>End Date</FormLabel>
+              <Input type="date" />
+            </FormControl>
+            <FormControl isDisabled>
+              <FormLabel>Location</FormLabel>
+              <Input type="text" placeholder="Location" />
+            </FormControl>
+            <Button isDisabled size="lg" pt="4" pb="4" pl="8" pr="8" colorScheme="blue">Search</Button>
+          </Flex>
           <Stack w="800px" h="100%" spacing="4" overflow="hidden">
             <Skeleton h='200px' />
             <Skeleton h='200px' />
@@ -60,6 +102,9 @@ export const PostList = () => {
     );
   }
 
+  console.log(posts);
+  console.log(filters);
+
   return (
     <div className="post_container">
       <SitterHeader />
@@ -69,7 +114,56 @@ export const PostList = () => {
             <Text fontSize='lg' colorScheme='grey'>There aren't any posts yet</Text>
           </div>
         )}
-        {posts.map((post) => (
+        <Flex
+          direction="column"
+          gap="4"
+          mb="4"
+          borderRadius="16"
+          p="8"
+          pl="16"
+          pr="16"
+          bg="#ffffff"
+          shadow="sm"
+        >
+          <Flex
+            alignItems="center" justifyContent="space-between" gap="4">
+            <FormControl>
+              <FormLabel>Start Date</FormLabel>
+              <Input onChange={(e) => {
+                setFilters({
+                  ...filters,
+                  startAt: e.target.value
+                })
+              }} type="date" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>End Date</FormLabel>
+              <Input onChange={(e) => {
+                setFilters({
+                  ...filters,
+                  finishAt: e.target.value
+                })
+              }} type="date" /> 
+            </FormControl>
+            <FormControl>
+              <FormLabel>Location</FormLabel>
+              <Input onChange={(e) => {
+                setFilters({
+                  ...filters,
+                  location: e.target.value
+                })
+              }} type="text" placeholder="Location" />
+            </FormControl>
+          </Flex>
+          <Button w="100%" size="lg" pt="4" pb="4" pl="8" pr="8" onClick={() => {
+            setCurrentFilters({ ...filters });
+          }} colorScheme="blue">Search</Button>
+        </Flex>
+        {posts
+          .filter((post) => (currentFilters.location !== "") ? post.location === currentFilters.location : true)
+          .filter((post) => (currentFilters.startAt !== "") ? post.startat.split('T')[0] === currentFilters.startAt : true)
+          .filter((post) => (currentFilters.finishAt !== "") ? post.finishat.split('T')[0] === currentFilters.finishAt : true)
+          .map((post) => (
           <PostItem key={post.id} post={post} />
         ))}
       </div>

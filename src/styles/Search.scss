@@ -1,0 +1,17 @@
+  .login-form-input {
+    font-family: 'Roboto', sans-serif;
+    padding: 6px 12px;
+    height: 40px;
+    flex: 1;
+    font-size: 16px;
+    border: 0px;
+    color: #535657;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: #abb5bd;
+    }
+  }
