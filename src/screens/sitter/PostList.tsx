@@ -102,9 +102,6 @@ export const PostList = () => {
     );
   }
 
-  console.log(posts);
-  console.log(filters);
-
   return (
     <div className="post_container">
       <SitterHeader />
@@ -160,7 +157,9 @@ export const PostList = () => {
           }} colorScheme="blue">Search</Button>
         </Flex>
         {posts
-          .filter((post) => (currentFilters.location !== "") ? post.location === currentFilters.location : true)
+          .filter((post) => (currentFilters.location !== "")
+            ? post.location.toLowerCase().includes(currentFilters.location.toLocaleLowerCase())
+            : true)
           .filter((post) => (currentFilters.startAt !== "") ? post.startat.split('T')[0] === currentFilters.startAt : true)
           .filter((post) => (currentFilters.finishAt !== "") ? post.finishat.split('T')[0] === currentFilters.finishAt : true)
           .map((post) => (
