@@ -1,10 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { HostHeader } from "../../components/header/HostHeader";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../state";
 import { Accordion, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
 import api from "../../api";
-import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
 import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
 import { parseDate } from "../../utils/date";
@@ -20,7 +18,6 @@ export const HostPost = () => {
   const [post, setPost] = useState<Post>();
   const [applicants, setApplicants] = useState<Applications[]>([]);
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -29,11 +26,7 @@ export const HostPost = () => {
         const post = await api.get(`/posts/${id}`);
         setPost(post.data);
       } catch (error: any) {
-        if (error?.response && error.response.data.code === 401) {
-          dispatch(logout());
-        } else {
-          setError(error.response.data.detail ?? 'Something went wrong, try again later');
-        }
+        setError(error.response.data.detail ?? 'Something went wrong, try again later');
       }
     };
 
@@ -42,22 +35,18 @@ export const HostPost = () => {
         const applicants = await api.get(`/applications/${id}`);
         setApplicants(applicants.data);
       } catch (error: any) {
-        if (error?.response && error.response.data.code === 401) {
-          dispatch(logout());
-        } else {
-          setError(error.response.data.detail ?? 'Something went wrong, try again later');
-        }
+        setError(error.response.data.detail ?? 'Something went wrong, try again later');
       }
     };
     getPosts();
     getApplicants();
-  }, [id, dispatch]);
+  }, [id]);
 
   if (!post) {
     return (
       <div>
         <HostHeader />
-        <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
+        <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
         <VStack mt="50px" ml="50px" mr="50px" mb="50px">
           <Container maxW='md'>
             <Skeleton height="200px" />
@@ -84,9 +73,9 @@ export const HostPost = () => {
   return (
     <div className="single_post_container">
       <HostHeader />
-      <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
+      <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
       <Card w="1000px" my={6}>
-        <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate('/posts'); }}>
+        <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate(-1); }}>
           <Icon as={FaArrowLeft} />
         </button>
         <VStack mt="50px" ml="50px" mr="50px" mb="50px">

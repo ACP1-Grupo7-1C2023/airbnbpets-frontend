@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
 import { Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { PostItem, PostsList } from "../../components/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
-import { useAppDispatch } from "../../state";
+import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
+import { ApplicationItem, ApplicationList } from "../../components/ApplicationItem";
 import "../../styles/Post.scss";
 
 export const MyApplications = () => {
-  const [posts, setPosts] = useState<PostsList>([]);
+  const [applications, setApplications] = useState<ApplicationList>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const session = useAppSelector(state => state.auth.session);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const getPosts = async () => {
+    const getApplications = async () => {
       setLoading(true);
       try {
-        const response = await api.get<PostsList>('/posts');
-        setPosts(response.data);
+        const response = await api.get<ApplicationList>('/my-applications', { headers: {
+          Authorization: `Bearer ${session?.token}`
+        }});
+        setApplications(response.data);
         setLoading(false);
       } catch (error: any) {
         if (error?.response && error.response.data.code === 401) {
@@ -31,7 +34,7 @@ export const MyApplications = () => {
       }
     }
 
-    getPosts();
+    getApplications();
   }, [dispatch]);
 
   if (loading) {
@@ -64,13 +67,13 @@ export const MyApplications = () => {
     <div className="post_container">
       <SitterHeader />
       <div className="post_list_container">
-        {posts.length === 0 && (
+        {applications.length === 0 && (
           <div className="post_empty">
-            <Text fontSize='lg' colorScheme='grey'>You haven't made any applications yet</Text>
+            <Text fontSize='lg' colorScheme='grey'>You haven't applied to any post yet</Text>
           </div>
         )}
-        {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
+        {applications.map((a) => (
+          <ApplicationItem key={a.postId} application={a} />
         ))}
       </div>
     </div>

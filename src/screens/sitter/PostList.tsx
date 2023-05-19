@@ -5,8 +5,6 @@ import "../../styles/Post.scss";
 import { PostItem, PostsList } from "../../components/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
-import { useAppDispatch } from "../../state";
-import { logout } from "../../state/actions";
 import "../../styles/Search.scss"
 
 type Filters = {
@@ -19,7 +17,6 @@ export const PostList = () => {
   const [posts, setPosts] = useState<PostsList>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const dispatch = useAppDispatch();
   const [filters, setFilters] = useState<Filters>({
     location: '',
     startAt: '',
@@ -39,17 +36,13 @@ export const PostList = () => {
         setPosts(response.data);
         setLoading(false);
       } catch (error: any) {
-        if (error?.response && error.response.data.code === 401) {
-          dispatch(logout());
-        } else {
-          setError(error.response.data.detail ?? 'Something went wrong, try again later');
-          setLoading(false);
-        }
+        setError(error.response.data.detail ?? 'Something went wrong, try again later');
+        setLoading(false);
       }
     }
 
     getPosts();
-  }, [dispatch]);
+  }, []);
 
   if (loading) {
     return (
