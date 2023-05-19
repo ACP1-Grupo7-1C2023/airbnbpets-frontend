@@ -116,9 +116,8 @@ export const PostList = () => {
           gap="4"
           mb="4"
           borderRadius="16"
-          p="8"
-          pl="16"
-          pr="16"
+          py="6"
+          px="8"
           bg="#ffffff"
           shadow="sm"
         >
@@ -152,7 +151,7 @@ export const PostList = () => {
               }} type="text" placeholder="Location" />
             </FormControl>
           </Flex>
-          <Button w="100%" size="lg" pt="4" pb="4" pl="8" pr="8" onClick={() => {
+          <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
             setCurrentFilters({ ...filters });
           }} colorScheme="blue">Search</Button>
         </Flex>
