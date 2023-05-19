@@ -54,28 +54,30 @@ export const PostList = () => {
         <SitterHeader />
         <div className="post_list_container">
           <Flex
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb="4"
+            direction="column"
             gap="4"
+            mb="2"
             borderRadius="16"
-            p="8"
+            py="4"
+            px="6"
             bg="#ffffff"
             shadow="sm"
           >
-            <FormControl isDisabled>
-              <FormLabel>Start Date</FormLabel>
-              <Input type="date"/>
-            </FormControl>
-            <FormControl isDisabled>
-              <FormLabel>End Date</FormLabel>
-              <Input type="date" />
-            </FormControl>
-            <FormControl isDisabled>
-              <FormLabel>Location</FormLabel>
-              <Input type="text" placeholder="Location" />
-            </FormControl>
+            <Flex
+              alignItems="center" justifyContent="space-between" gap="4">
+              <FormControl isDisabled>
+                <FormLabel>Start Date</FormLabel>
+                <Input type="date"/>
+              </FormControl>
+              <FormControl isDisabled>
+                <FormLabel>End Date</FormLabel>
+                <Input type="date" />
+              </FormControl>
+              <FormControl isDisabled>
+                <FormLabel>Location</FormLabel>
+                <Input type="text" placeholder="Location" />
+              </FormControl>
+            </Flex>
             <Button isDisabled size="lg" pt="4" pb="4" pl="8" pr="8" colorScheme="blue">Search</Button>
           </Flex>
           <Stack w="800px" h="100%" spacing="4" overflow="hidden">
@@ -111,10 +113,10 @@ export const PostList = () => {
         <Flex
           direction="column"
           gap="4"
-          mb="4"
+          mb="2"
           borderRadius="16"
-          py="6"
-          px="8"
+          py="4"
+          px="6"
           bg="#ffffff"
           shadow="sm"
         >

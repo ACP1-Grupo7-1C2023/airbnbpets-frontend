@@ -52,12 +52,24 @@ export const Login = () => {
       <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
         <div className={errors.email ? "login-form-item-error" : "login-form-item"}>
           <FaEnvelope className="login-form-icon"/>
-          <input className="login-form-input" type="text" placeholder="Email" {...register("email")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="text"
+            placeholder="Email"
+            {...register("email")}
+            maxLength={50}
+          />
         </div>
         {errors.email && <p className="login-form-input-error">{errors.email.message}</p>}
         <div className={errors.password ? "login-form-item-error" : "login-form-item"}>
           <FaLock className="login-form-icon"/>
-          <input className="login-form-input" type="password" placeholder="Password" {...register("password")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+            maxLength={50}
+          />
         </div>
         {errors.password && <p className="login-form-input-error">{errors.password.message}</p>}
         <div className="login-form-type">

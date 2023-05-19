@@ -62,27 +62,52 @@ export const Signup = () => {
       <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
         <div className={errors.firstName ? "login-form-item-error" : "login-form-item"}>
           <FaUserAlt className="login-form-icon"/>
-          <input className="login-form-input" type="text" placeholder="First name" {...register("firstName")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="text"
+            placeholder="First name"
+            {...register("firstName")}
+            maxLength={50} />
         </div>
         {errors.firstName && <p className="login-form-input-error">{errors.firstName.message}</p>}
         <div className={errors.lastName ? "login-form-item-error" : "login-form-item"}>
           <FaUserAlt className="login-form-icon"/>
-          <input className="login-form-input" type="text" placeholder="Last name" {...register("lastName")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="text"
+            placeholder="Last name"
+            {...register("lastName")}
+            maxLength={50} />
         </div>
         {errors.lastName && <p className="login-form-input-error">{errors.lastName.message}</p>}
         <div className={errors.email ? "login-form-item-error" : "login-form-item"}>
           <FaEnvelope className="login-form-icon"/>
-          <input className="login-form-input" type="text" placeholder="Email" {...register("email")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="text"
+            placeholder="Email"
+            {...register("email")}
+            maxLength={50} />
         </div>
         {errors.email && <p className="login-form-input-error">{errors.email.message}</p>}
         <div className={errors.password ? "login-form-item-error" : "login-form-item"}>
           <FaLock className="login-form-icon"/>
-          <input className="login-form-input" type="password" placeholder="Password" {...register("password")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="password"
+            placeholder="Password"
+            {...register("password")}
+            maxLength={50} />
         </div>
         {errors.password && <p className="login-form-input-error">{errors.password.message}</p>}
         <div className={errors.repeatPassword ? "login-form-item-error" : "login-form-item"}>
           <FaLock className="login-form-icon"/>
-          <input className="login-form-input" type="password" placeholder="Repeat password" {...register("repeatPassword")} maxLength={50} />
+          <input
+            className="login-form-input login-form-input-icon"
+            type="password"
+            placeholder="Repeat password"
+            {...register("repeatPassword")}
+            maxLength={50} />
         </div>
         {errors.repeatPassword && <p className="login-form-input-error">{errors.repeatPassword.message}</p>}
         <div className="login-form-type">
