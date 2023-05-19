@@ -28,7 +28,11 @@ export const MyApplications = () => {
         if (error?.response && error.response.data.code === 401) {
           dispatch(logout());
         } else {
-          setError(error.response.data.detail ?? 'Something went wrong, try again later');
+          if (error.response.data.detail && typeof error.response.data.detail === 'string') {
+            setError(error.response.data.detail);
+          } else {
+            setError('Something went wrong, try again later');
+          }
           setLoading(false);
         }
       }

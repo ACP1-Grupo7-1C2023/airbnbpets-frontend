@@ -36,7 +36,11 @@ export const PostList = () => {
         setPosts(response.data);
         setLoading(false);
       } catch (error: any) {
-        setError(error.response.data.detail ?? 'Something went wrong, try again later');
+        if (error.response.data.detail && typeof error.response.data.detail === 'string') {
+          setError(error.response.data.detail);
+        } else {
+          setError('Something went wrong, try again later');
+        }
         setLoading(false);
       }
     }

@@ -30,7 +30,11 @@ export const SitterPost = () => {
         const post = await api.get(`/posts/${id}`);
         setPost(post.data);
       } catch (error: any) {
-        setError(error.response.data.detail ?? 'Something went wrong, try again later');
+        if (error.response.data.detail && typeof error.response.data.detail === 'string') {
+          setError(error.response.data.detail);
+        } else {
+          setError('Something went wrong, try again later');
+        }
       }
     };
     getPosts();
