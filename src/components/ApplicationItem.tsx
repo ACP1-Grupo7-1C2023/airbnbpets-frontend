@@ -3,6 +3,7 @@ import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../utils/date";
 import { useNavigate } from "react-router-dom";
+import { StatusBadge } from "./StatusBadge";
 
 export type ApplicationList = Application[];
 
@@ -31,8 +32,9 @@ export const ApplicationItem = ({ application }: { application: Application }) =
     }}
       onClick={onClick}
     >
-      <CardHeader>
+      <CardHeader display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" gap="8">
         <Heading size='md'>{application.title}</Heading>
+        <StatusBadge status="pending" />
       </CardHeader>
       <CardBody pt={0}>
         <Text fontSize='sm'>
