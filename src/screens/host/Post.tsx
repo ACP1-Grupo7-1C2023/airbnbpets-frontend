@@ -13,6 +13,7 @@ import { PetsSection } from "../../components/post/PetsSection";
 import { ApplicationsSection } from "../../components/post/ApplicationsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
+import "../../styles/Post.scss";
 
 export const HostPost = () => {
   const { id } = useParams();
@@ -81,7 +82,7 @@ export const HostPost = () => {
   }
 
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="single_post_container">
       <HostHeader />
       <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
       <Card w="1000px" my={6}>

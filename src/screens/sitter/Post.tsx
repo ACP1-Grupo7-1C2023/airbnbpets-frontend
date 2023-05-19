@@ -96,7 +96,7 @@ export const SitterPost = () => {
   }
 
   return (
-    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="single_post_container">
       <SitterHeader />
       <ErrorAlert error={error} onClose={() => { setError(''); navigate('/posts'); }} />
       <Card w="1000px" my={6}>

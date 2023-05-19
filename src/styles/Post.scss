@@ -20,6 +20,15 @@
   }
 }
 
+.single_post_container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--secondary-background-color);
+}
+
 .post_add_post_button {
   position: fixed;
   bottom: 20px;
