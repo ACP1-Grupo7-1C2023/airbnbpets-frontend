@@ -104,9 +104,11 @@ export const SitterPost = () => {
           <Icon as={FaArrowLeft} />
         </button>
         <VStack mt="50px" ml="50px" mr="50px" mb="50px">
-          <Container maxW='md'>
-            <ImagesGallery images={post.homeUrls} />
-          </Container>
+          {post.homeUrls.length > 0 && (
+            <Container maxW='md'>
+              <ImagesGallery images={post.homeUrls} />
+            </Container>
+          )}
           <Heading size="lg">{post.title}</Heading>
           <Text>{post.description}</Text>
           <Flex direction='row' align='center' gap={2}>
@@ -123,9 +125,11 @@ export const SitterPost = () => {
           </Flex>
         </VStack>
         <Accordion defaultIndex={[0]} allowMultiple>
-          <PetsSection pets={post.petUrls} />
+          {post.petUrls.length > 0 && (
+            <PetsSection pets={post.petUrls} />
+          )}
         </Accordion>
-        <Flex p={4} justifyContent="center" gap={4}>
+        <Flex p={4} justifyContent="flex-end" gap={4}>
           <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
             {applied ? 'Applied' : 'Apply'}
           </Button>

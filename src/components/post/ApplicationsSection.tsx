@@ -45,6 +45,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
       </h1>
       <AccordionPanel pb={4}>
         <VStack>
+          {applicants.length === 0 && <Text p="4">No applications yet</Text>}
           {
             applicants.map((applicant: Applications) => (
               <Flex width="75%" alignItems="center" key={applicant.email}>
