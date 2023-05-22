@@ -31,31 +31,9 @@ export const HostPost = () => {
     const getPosts = async () => {
       try {
         const post = await api.get(`/posts/${id}`);
+        const qualis = await api.get(`/qualifications/host?email=${post.data.hostEmail}`);
+        setQualifications(qualis.data);
         setPost(post.data);
-        setQualifications([{
-          score: 5,
-          rating: 'Very good',
-        },
-        {
-          score: 4,
-          rating: 'Good',
-        },
-        {
-          score: 3,
-          rating: 'Ok',
-        },
-        {
-          score: 2,
-          rating: 'Bad',
-        },
-        {
-          score: 1,
-          rating: 'Very bad',
-        },
-        {
-          score: 0,
-          rating: 'Terrible',
-        }]);
       } catch (error: any) {
         if (error.response.data.detail && typeof error.response.data.detail === 'string') {
           setError(error.response.data.detail);

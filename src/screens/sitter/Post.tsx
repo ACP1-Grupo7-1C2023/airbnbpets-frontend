@@ -35,31 +35,9 @@ export const SitterPost = () => {
     const getPosts = async () => {
       try {
         const post = await api.get(`/posts/${id}`);
+        const qualis = await api.get(`/qualifications/host?email=${post.data.hostEmail}`);
+        setQualifications(qualis.data);
         setPost(post.data);
-        setQualifications([{
-          score: 5,
-          rating: 'Very good',
-        },
-        {
-          score: 4,
-          rating: 'Good',
-        },
-        {
-          score: 3,
-          rating: 'Ok',
-        },
-        {
-          score: 2,
-          rating: 'Bad',
-        },
-        {
-          score: 1,
-          rating: 'Very bad',
-        },
-        {
-          score: 0,
-          rating: 'Terrible',
-        }]);
       } catch (error: any) {
         if (error.response.data.detail && typeof error.response.data.detail === 'string') {
           setError(error.response.data.detail);
@@ -98,9 +76,38 @@ export const SitterPost = () => {
     }
   }
 
-  const newQualification = (score: number, rating: string) => {
+  const newQualification = async (score: number, rating: string) => {
     console.log(score, rating);
-    onCloseHostQualification();
+    try {
+      setLoading(true);
+      console.log(session);
+      await api.post("/qualify/user", {
+        "postId": id,
+        rating,
+        score,
+        type: "host",
+        hostEmail: post?.hostEmail,
+        petSitterEmail: session?.email,
+      }, {
+        headers: {
+          Authorization: `Bearer ${session?.token}`
+        }
+      })
+      toast({ title: "Qualification added successfully", status: "success" });
+      const qualis = await api.get(`/qualifications/host?email=${post?.hostEmail}`);
+      setQualifications(qualis.data);
+      onCloseHostQualification();
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      if (error?.response && error.response.data.code === 401) {
+        dispatch(logout());
+      } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
+        toast({ title: "You already applied to this post", status: "error" });
+      } else {
+        toast({ title: "Something went wrong, try again later", status: "error" });
+      }
+    }
   }
 
   if (!post) {
@@ -140,6 +147,7 @@ export const SitterPost = () => {
         onClose={onCloseHostQualification}
         qualifications={qualifications}
         onNewQualification={newQualification}
+        loading={loading}
         canAdd
       />
       <Card w="1000px" my={6}>
