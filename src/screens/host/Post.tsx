@@ -1,21 +1,28 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { HostHeader } from "../../components/header/HostHeader";
 import { useEffect, useState } from "react";
-import { Accordion, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack } from "@chakra-ui/react";
+import { Accordion, Button, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import api from "../../api";
 import { ErrorAlert } from "../../components/ErrorAlert";
-import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
+import { MdCalendarMonth, MdLocationPin, MdPerson } from "react-icons/md";
 import { parseDate } from "../../utils/date";
-import { Applications, Post } from "../../interfaces/AppInterfaces";
+import { Applications, Post, Qualification } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
 import { ApplicationsSection } from "../../components/post/ApplicationsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
 import "../../styles/Post.scss";
+import { Stars } from "../../components/Stars";
+import { QualificationsModal } from "../../components/QualificationsModal";
 
 export const HostPost = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post>();
+  const [qualifications, setQualifications] = useState<Qualification[]>([]);
+  const {
+    isOpen: isOpenHostQualification,
+    onOpen: onOpenHostQualification,
+    onClose: onCloseHostQualification } = useDisclosure();
   const [applicants, setApplicants] = useState<Applications[]>([]);
   const navigate = useNavigate();
   const [error, setError] = useState('');
@@ -25,6 +32,30 @@ export const HostPost = () => {
       try {
         const post = await api.get(`/posts/${id}`);
         setPost(post.data);
+        setQualifications([{
+          score: 5,
+          rating: 'Very good',
+        },
+        {
+          score: 4,
+          rating: 'Good',
+        },
+        {
+          score: 3,
+          rating: 'Ok',
+        },
+        {
+          score: 2,
+          rating: 'Bad',
+        },
+        {
+          score: 1,
+          rating: 'Very bad',
+        },
+        {
+          score: 0,
+          rating: 'Terrible',
+        }]);
       } catch (error: any) {
         if (error.response.data.detail && typeof error.response.data.detail === 'string') {
           setError(error.response.data.detail);
@@ -49,6 +80,12 @@ export const HostPost = () => {
     getPosts();
     getApplicants();
   }, [id]);
+
+  const newQualification = (score: number, rating: string) => {
+    console.log(score, rating);
+    onCloseHostQualification();
+  }
+
 
   if (!post) {
     return (
@@ -82,6 +119,12 @@ export const HostPost = () => {
     <div className="single_post_container">
       <HostHeader />
       <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
+      <QualificationsModal
+        isOpen={isOpenHostQualification}
+        onClose={onCloseHostQualification}
+        qualifications={qualifications}
+        onNewQualification={newQualification}
+      />
       <Card w="1000px" my={6}>
         <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate(-1); }}>
           <Icon as={FaArrowLeft} />
@@ -94,6 +137,14 @@ export const HostPost = () => {
           )}
           <Heading size="lg">{post.title}</Heading>
           <Text>{post.description}</Text>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdPerson} />
+            <Text>
+              {post.hostEmail}
+            </Text>
+            <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
+            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See qualifications</Button>
+          </Flex>
           <Flex direction='row' align='center' gap={2}>
             <Icon as={MdLocationPin} />
             <Text>

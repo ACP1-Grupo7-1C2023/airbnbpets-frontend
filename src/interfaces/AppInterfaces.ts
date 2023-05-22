@@ -11,11 +11,17 @@ export interface Post {
   startAt: string;
   finishAt: string;
   homeUrls: string[];
-  petUrls: string[]
+  petUrls: string[];
+  hostEmail: string;
 }
 
 export interface Applications {
   name: string;
   lastname: string;
   email: string;
+}
+
+export interface Qualification {
+  score: number;
+  rating: string;
 }

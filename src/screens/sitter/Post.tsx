@@ -1,21 +1,28 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { Accordion, Button, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack, useToast } from "@chakra-ui/react";
-import { MdCalendarMonth, MdLocationPin } from "react-icons/md";
+import { Accordion, Button, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { MdCalendarMonth, MdLocationPin, MdPerson } from "react-icons/md";
 import { parseDate } from "../../utils/date";
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
 import { ErrorAlert } from "../../components/ErrorAlert";
-import { Post } from "../../interfaces/AppInterfaces";
+import { Post, Qualification } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
+import { QualificationsModal } from "../../components/QualificationsModal";
+import { Stars } from "../../components/Stars";
 
 export const SitterPost = () => {
   const { id } = useParams();
   const [post, setPost] = useState<Post>();
+  const [qualifications, setQualifications] = useState<Qualification[]>([]);
+  const { 
+    isOpen: isOpenHostQualification,
+    onOpen: onOpenHostQualification,
+    onClose: onCloseHostQualification } = useDisclosure();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [error, setError] = useState('');
@@ -29,6 +36,30 @@ export const SitterPost = () => {
       try {
         const post = await api.get(`/posts/${id}`);
         setPost(post.data);
+        setQualifications([{
+          score: 5,
+          rating: 'Very good',
+        },
+        {
+          score: 4,
+          rating: 'Good',
+        },
+        {
+          score: 3,
+          rating: 'Ok',
+        },
+        {
+          score: 2,
+          rating: 'Bad',
+        },
+        {
+          score: 1,
+          rating: 'Very bad',
+        },
+        {
+          score: 0,
+          rating: 'Terrible',
+        }]);
       } catch (error: any) {
         if (error.response.data.detail && typeof error.response.data.detail === 'string') {
           setError(error.response.data.detail);
@@ -67,6 +98,11 @@ export const SitterPost = () => {
     }
   }
 
+  const newQualification = (score: number, rating: string) => {
+    console.log(score, rating);
+    onCloseHostQualification();
+  }
+
   if (!post) {
     return (
       <div>
@@ -99,6 +135,13 @@ export const SitterPost = () => {
     <div className="single_post_container">
       <SitterHeader />
       <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
+      <QualificationsModal
+        isOpen={isOpenHostQualification}
+        onClose={onCloseHostQualification}
+        qualifications={qualifications}
+        onNewQualification={newQualification}
+        canAdd
+      />
       <Card w="1000px" my={6}>
         <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate(-1); }}>
           <Icon as={FaArrowLeft} />
@@ -111,6 +154,14 @@ export const SitterPost = () => {
           )}
           <Heading size="lg">{post.title}</Heading>
           <Text>{post.description}</Text>
+          <Flex direction='row' align='center' gap={2}>
+            <Icon as={MdPerson} />
+            <Text>
+              {post.hostEmail}
+            </Text>
+            <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
+            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See qualifications</Button>
+          </Flex>
           <Flex direction='row' align='center' gap={2}>
             <Icon as={MdLocationPin} />
             <Text>
