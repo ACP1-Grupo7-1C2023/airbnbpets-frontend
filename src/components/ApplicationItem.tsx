@@ -14,6 +14,7 @@ interface Application {
   description: string;
   startAt: string;
   finishAt: string;
+  status: string;
   homeUrls: string[];
   petUrls: string[];
 }
@@ -34,7 +35,7 @@ export const ApplicationItem = ({ application }: { application: Application }) =
     >
       <CardHeader display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" gap="8">
         <Heading size='md'>{application.title}</Heading>
-        <StatusBadge status="pending" />
+        <StatusBadge status={application.status} />
       </CardHeader>
       <CardBody pt={0}>
         <Text fontSize='sm'>

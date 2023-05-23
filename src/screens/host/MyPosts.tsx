@@ -1,11 +1,11 @@
 import "../../styles/Post.scss";
 import { useEffect, useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
-import { PostItem, PostsList } from "../../components/PostItem";
+import { PostItem, PostsList } from "../../components/post/PostItem";
 import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
-import { NewPostModal } from "../../components/NewPostModal";
+import { NewPostModal } from "../../components/post/NewPostModal";
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";

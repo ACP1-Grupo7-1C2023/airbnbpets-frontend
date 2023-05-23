@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
-import { PostItem, PostsList } from "../../components/PostItem";
+import { PostItem, PostsList } from "../../components/post/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 import "../../styles/Search.scss"
@@ -105,11 +105,6 @@ export const PostList = () => {
     <div className="post_container">
       <SitterHeader />
       <div className="post_list_container">
-        {posts.length === 0 && (
-          <div className="post_empty">
-            <Text fontSize='lg' colorScheme='grey'>There aren't any posts yet</Text>
-          </div>
-        )}
         <Flex
           direction="column"
           gap="4"
@@ -154,6 +149,11 @@ export const PostList = () => {
             setCurrentFilters({ ...filters });
           }} colorScheme="blue">Search</Button>
         </Flex>
+        {posts.length === 0 && (
+          <div className="post_empty">
+            <Text fontSize='lg' colorScheme='grey'>There aren't any posts yet</Text>
+          </div>
+        )}
         {posts
           .filter((post) => (currentFilters.location !== "")
             ? post.location.toLowerCase().includes(currentFilters.location.toLocaleLowerCase())

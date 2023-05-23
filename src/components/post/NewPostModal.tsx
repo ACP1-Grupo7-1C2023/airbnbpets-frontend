@@ -1,14 +1,14 @@
-import "../styles/Login.scss";
+import "../../styles/Login.scss";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useState } from "react";
 import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
-import api from "../api";
-import { useAppDispatch, useAppSelector } from "../state";
-import { ImagesPicker } from "./ImagesPicker";
-import { logout } from "../state/actions";
+import api from "../../api";
+import { useAppDispatch, useAppSelector } from "../../state";
+import { ImagesPicker } from "../ImagesPicker";
+import { logout } from "../../state/actions";
 
 type PostInputs = {
   title: string;

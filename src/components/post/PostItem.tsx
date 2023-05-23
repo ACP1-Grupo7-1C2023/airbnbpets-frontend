@@ -1,7 +1,7 @@
 import { Card, CardBody, CardHeader, Flex, Heading, Text } from "@chakra-ui/react";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
-import { parseDate } from "../utils/date";
+import { parseDate } from "../../utils/date";
 import { useNavigate } from "react-router-dom";
 
 export type PostsList = Post[];

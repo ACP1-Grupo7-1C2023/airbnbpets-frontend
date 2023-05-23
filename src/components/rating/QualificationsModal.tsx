@@ -1,11 +1,10 @@
 import { Button, Center, Divider, Flex, Heading, Icon, Modal,
   ModalBody, ModalCloseButton, ModalContent, ModalFooter,
   ModalHeader, ModalOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
-import { Qualification } from "../interfaces/AppInterfaces";
+import { Qualification } from "../../interfaces/AppInterfaces";
 import { Stars } from "./Stars";
 import { useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
-import { useAppSelector } from "../state";
 
 type QualificationsModalProps = {
   isOpen: boolean;
@@ -19,9 +18,6 @@ type QualificationsModalProps = {
 export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, qualifications, canAdd, loading }: QualificationsModalProps) => {
   const [score, setScore] = useState(3);
   const [rating, setRating] = useState('');
-
-  const token = useAppSelector(state => state.auth.session?.token);
-  console.log(token);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

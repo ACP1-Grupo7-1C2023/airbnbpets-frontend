@@ -12,8 +12,8 @@ import { ApplicationsSection } from "../../components/post/ApplicationsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
 import "../../styles/Post.scss";
-import { Stars } from "../../components/Stars";
-import { QualificationsModal } from "../../components/QualificationsModal";
+import { Stars } from "../../components/rating/Stars";
+import { QualificationsModal } from "../../components/rating/QualificationsModal";
 
 export const HostPost = () => {
   const { id } = useParams();

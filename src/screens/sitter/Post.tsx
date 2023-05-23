@@ -12,8 +12,8 @@ import { Post, Qualification } from "../../interfaces/AppInterfaces";
 import { PetsSection } from "../../components/post/PetsSection";
 import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
-import { QualificationsModal } from "../../components/QualificationsModal";
-import { Stars } from "../../components/Stars";
+import { QualificationsModal } from "../../components/rating/QualificationsModal";
+import { Stars } from "../../components/rating/Stars";
 
 export const SitterPost = () => {
   const { id } = useParams();
@@ -80,7 +80,6 @@ export const SitterPost = () => {
     console.log(score, rating);
     try {
       setLoading(true);
-      console.log(session);
       await api.post("/qualify/user", {
         "postId": id,
         rating,
@@ -100,7 +99,9 @@ export const SitterPost = () => {
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
-      if (error?.response && error.response.data.code === 401) {
+      if (error?.response && error.response.data.name === "UserNotAllowedToQualifyError") {
+        toast({ title: "You are not allowed to qualify this post", status: "error" });
+      } else if (error?.response && error.response.data.code === 401) {
         dispatch(logout());
       } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
         toast({ title: "You already applied to this post", status: "error" });

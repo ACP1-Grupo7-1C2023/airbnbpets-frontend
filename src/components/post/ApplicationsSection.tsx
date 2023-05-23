@@ -1,10 +1,10 @@
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Flex, Heading, Icon, Spacer, Text, VStack, useToast } from "@chakra-ui/react";
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Divider, Flex, Heading, Icon, Spacer, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { Applications } from "../../interfaces/AppInterfaces";
-import { MdStar, MdStarBorder } from "react-icons/md";
 import api from "../../api";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
+import { SitterRatingModal } from "../rating/SitterRatingModal";
 
 type ApplicationsSectionProps = {
   applicants: Applications[];
@@ -14,6 +14,7 @@ type ApplicationsSectionProps = {
 export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionProps) => {
   const session = useAppSelector(state => state.auth.session);
   const [loading, setLoading] = useState(false);
+  const [ratingsEmail, setRatingsEmail] = useState<string | null>(null);
   const toast = useToast();
   const dispatch = useAppDispatch();
 
@@ -35,8 +36,21 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
     }
   }
 
+  const onCloseRatings = () => {
+    setRatingsEmail(null);
+  }
+
+  const onOpenRatings = (email: string) => {
+    setRatingsEmail(email);
+  }
+
   return (
     <AccordionItem>
+      <SitterRatingModal
+        sitterEmail={ratingsEmail}
+        onClose={onCloseRatings}
+        canAdd
+      />
       <h1>
         <AccordionButton p={4}>
           <Heading size="lg" flex="1">Applications</Heading>
@@ -48,36 +62,31 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
           {applicants.length === 0 && <Text p="4">No applications yet</Text>}
           {
             applicants.map((applicant: Applications) => (
-              <Flex width="75%" alignItems="center" key={applicant.email}>
-                <Text mr={4}>{`${applicant.name} ${applicant.lastname}`}</Text>
-                {Array(3)
-                  .fill('')
-                  .map((_, i) => (
-                    <Icon
-                      as={MdStar}
-                      key={i}
-                      color='teal.500'
-                    />
-                  ))}
-                {Array(2)
-                  .fill('')
-                  .map((_, i) => (
-                    <Icon
-                      as={MdStarBorder}
-                      key={i}
-                      color='teal.500'
-                    />
-                  ))}
-                <Spacer />
-                <Button
-                  colorScheme="teal"
-                  size="sm"
-                  onClick={() => { onSelect(applicant) }}
-                  isLoading={loading}
-                >
-                  Select
-                </Button>
-              </Flex>
+              <>
+                <Flex width="75%" alignItems="center" key={applicant.email}>
+                  <Text mr={4}>{`${applicant.name} ${applicant.lastname}`}</Text>
+                  <Spacer />
+                  <Button
+                    size="sm"
+                    colorScheme="teal"
+                    variant="outline"
+                    isLoading={loading}
+                    onClick={() => { onOpenRatings(applicant.email) }}
+                    mr="6px"
+                  >
+                    See ratings
+                  </Button>
+                  <Button
+                    colorScheme="teal"
+                    size="sm"
+                    onClick={() => { onSelect(applicant) }}
+                    isLoading={loading}
+                  >
+                    Select
+                  </Button>
+                </Flex>
+                <Divider width="75%" />
+              </>
             ))
           }
         </VStack>
