@@ -47,6 +47,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
   return (
     <AccordionItem>
       <SitterRatingModal
+        postId={postId}
         sitterEmail={ratingsEmail}
         onClose={onCloseRatings}
         canAdd

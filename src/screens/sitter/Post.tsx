@@ -92,7 +92,7 @@ export const SitterPost = () => {
           Authorization: `Bearer ${session?.token}`
         }
       })
-      toast({ title: "Qualification added successfully", status: "success" });
+      toast({ title: "Rating added successfully", status: "success" });
       const qualis = await api.get(`/qualifications/host?email=${post?.hostEmail}`);
       setQualifications(qualis.data);
       onCloseHostQualification();
@@ -103,8 +103,6 @@ export const SitterPost = () => {
         toast({ title: "You are not allowed to qualify this post", status: "error" });
       } else if (error?.response && error.response.data.code === 401) {
         dispatch(logout());
-      } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
-        toast({ title: "You already applied to this post", status: "error" });
       } else {
         toast({ title: "Something went wrong, try again later", status: "error" });
       }

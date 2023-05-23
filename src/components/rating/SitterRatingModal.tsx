@@ -6,19 +6,24 @@ import { Stars } from "./Stars";
 import { useEffect, useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
 import api from "../../api";
+import { useAppDispatch, useAppSelector } from "../../state";
+import { logout } from "../../state/actions";
 
 type Props = {
+  postId: number;
   onClose: () => void;
   sitterEmail: string | null;
   canAdd?: boolean;
 }
 
-export const SitterRatingModal = ({ onClose, sitterEmail, canAdd = true }: Props) => {
+export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true }: Props) => {
   const [score, setScore] = useState(3);
   const [rating, setRating] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadingPost, setLoadingPost] = useState(false);
   const [ratings, setRatings] = useState<Qualification[]>([]);
+  const session = useAppSelector(state => state.auth.session);
+  const dispatch = useAppDispatch();
   const toast = useToast();
 
   useEffect(() => {
@@ -38,8 +43,35 @@ export const SitterRatingModal = ({ onClose, sitterEmail, canAdd = true }: Props
     getRatings();
   }, [sitterEmail]);
 
-  const onPostRating = () => {
-    console.log(score, rating);
+  const onPostRating = async () => {
+    setLoadingPost(true);
+    try {
+      await api.post("/qualify/user", {
+        type: "petSitter",
+        petSitterEmail: sitterEmail,
+        postId,
+        rating,
+        score,
+        hostEmail: session?.email,
+      }, {
+        headers: {
+          Authorization: `Bearer ${session?.token}`
+        }
+      })
+      toast({ title: "Rating added successfully", status: "success" });
+      setLoadingPost(false);
+      onClose();
+    } catch (error: any) {
+      if (error?.response && error.response.data.name === "UserNotAllowedToQualifyError") {
+        toast({ title: "You are not allowed to qualify this user", status: "error" });
+      } else if (error?.response && error.response.data.code === 401) {
+        dispatch(logout());
+      } else {
+        toast({ title: "Something went wrong, try again later", status: "error" });
+      }
+      setLoadingPost(false);
+      onClose();
+    }
   }
 
   if (loading) {
@@ -101,7 +133,7 @@ export const SitterRatingModal = ({ onClose, sitterEmail, canAdd = true }: Props
                   </Center>
                 </Flex>
                 <Flex alignItems="center" direction="row" gap={10} p={4}>
-                  <Button isLoading={loading} colorScheme="teal" mr={3} onClick={onPostRating}>
+                  <Button isLoading={loadingPost} colorScheme="teal" mr={3} onClick={onPostRating}>
                     Post
                   </Button>
                   <Button variant="ghost" onClick={onClose}>Close</Button>
