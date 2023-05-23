@@ -125,7 +125,7 @@ export const HostPost = () => {
             ) : (
               <Text fontSize="sm" px="8px">No ratings</Text>
             )}
-            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See comments</Button>
+            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See ratings</Button>
           </Flex>
           <Flex direction='row' align='center' gap={2}>
             <Icon as={MdLocationPin} />

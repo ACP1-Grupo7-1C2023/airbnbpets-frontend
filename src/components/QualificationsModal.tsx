@@ -1,4 +1,4 @@
-import { Button, Center, Divider, Flex, Icon, Modal,
+import { Button, Center, Divider, Flex, Heading, Icon, Modal,
   ModalBody, ModalCloseButton, ModalContent, ModalFooter,
   ModalHeader, ModalOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
 import { Qualification } from "../interfaces/AppInterfaces";
@@ -27,10 +27,13 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Qualifications</ModalHeader>
+        <ModalHeader>Ratings</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack>
+            {qualifications.length === 0 && (
+              <Text p="4">No ratings yet</Text>
+            )}
             {qualifications.map((qualification, index) => {
               return (
                 <>
@@ -45,27 +48,31 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
           </VStack>
         </ModalBody>
         {canAdd && (
-          <ModalFooter>
-            <Flex alignItems="center" direction="column" w="100%">
-              <Textarea placeholder="Write a qualification" onChange={(e) => {setRating(e.target.value)}}/>
-              <Flex alignItems="center" direction="row" gap={10} p={4}>
-                <Text>Select a score</Text> 
-                <Center p={2} _hover={{ cursor: "pointer" }} onClick={() => score > 0 && setScore(score - 1)}>
-                  <Icon as={MdRemove} />
-                </Center>
-                <Stars score={score} />
-                <Center p={2} _hover={{ cursor: "pointer" }} onClick={() => score < 5 && setScore(score + 1)}>
-                  <Icon as={MdAdd} />
-                </Center>
+          <>
+            <Divider orientation='horizontal' />
+            <ModalFooter>
+              <Flex alignItems="center" direction="column" w="100%">
+                <Text fontSize="xl" fontWeight="bold" alignSelf="flex-start" mb="8px">Add rating</Text>
+                <Textarea placeholder="Write a comment" onChange={(e) => {setRating(e.target.value)}}/>
+                <Flex alignItems="center" direction="row" gap={10} p={4}>
+                  <Text>Select a score</Text> 
+                  <Center p={2} _hover={{ cursor: "pointer" }} onClick={() => score > 0 && setScore(score - 1)}>
+                    <Icon as={MdRemove} />
+                  </Center>
+                  <Stars score={score} />
+                  <Center p={2} _hover={{ cursor: "pointer" }} onClick={() => score < 5 && setScore(score + 1)}>
+                    <Icon as={MdAdd} />
+                  </Center>
+                </Flex>
+                <Flex alignItems="center" direction="row" gap={10} p={4}>
+                  <Button isLoading={loading} colorScheme="teal" mr={3} onClick={() => onNewQualification(score, rating)}>
+                    Post
+                  </Button>
+                  <Button variant="ghost" onClick={onClose}>Close</Button>
+                </Flex>
               </Flex>
-              <Flex alignItems="center" direction="row" gap={10} p={4}>
-                <Button isLoading={loading} colorScheme="teal" mr={3} onClick={() => onNewQualification(score, rating)}>
-                  Add qualification
-                </Button>
-                <Button variant="ghost" onClick={onClose}>Close</Button>
-              </Flex>
-            </Flex>
-          </ModalFooter>
+            </ModalFooter>
+          </>
         )}
       </ModalContent>
     </Modal>
