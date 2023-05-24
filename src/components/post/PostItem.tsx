@@ -10,10 +10,9 @@ interface Post {
   id: number;
   title: string;
   description: string;
-  location: string,
+  location: string;
   startat: string;
   finishat: string;
-  applicantEmail: string;
 }
 
 export const PostItem = ({ post }: { post: Post }) => {

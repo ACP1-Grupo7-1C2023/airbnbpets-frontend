@@ -35,9 +35,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
       }});
       toast({ title: 'Applicant selected successfully!', status: 'success' });
       setLoading(false);
-      console.log(applicant)
       setSelected(true)
-      console.log(select)
     } catch (error: any) {
       setLoading(false);
       if (error?.response && error.response.data.code === 401) {
@@ -79,7 +77,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
                 {
                   (applicant.status === 'accepted' || applicant.status === 'pending') &&
                 <Flex width="75%" alignItems="center" key={applicant.email}>
-                  <Text mr={4}>{`${applicant.name} ${applicant.email}`}</Text>
+                  <Text mr={4}>{`${applicant.name} ${applicant.lastname}`}</Text>
                   <Spacer />
                   <Button
                     size="sm"

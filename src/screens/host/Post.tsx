@@ -47,7 +47,6 @@ export const HostPost = () => {
       try {
         const applicants = await api.get(`/applications/${id}`);
         setApplicants(applicants.data);
-        console.log(applicants.data)
       } catch (error: any) {
         if (error.response.data.detail && typeof error.response.data.detail === 'string') {
           setError(error.response.data.detail);
