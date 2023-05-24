@@ -19,6 +19,7 @@ export interface Applications {
   name: string;
   lastname: string;
   email: string;
+  status: string;
 }
 
 export interface Qualification {
