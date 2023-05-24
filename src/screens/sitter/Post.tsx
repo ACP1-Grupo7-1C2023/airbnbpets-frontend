@@ -109,6 +109,20 @@ export const SitterPost = () => {
     }
   }
 
+  const isActive = (status: string ) => {
+    if (status == 'active'){
+      return (
+      <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
+        {applied ? 'Applied' : 'Apply'}
+      </Button>)
+    }
+    return (
+      <Button colorScheme="red" size="lg" isLoading={loading} isDisabled={true}>
+        Closed
+      </Button>
+    )
+  }
+
   if (!post) {
     return (
       <div>
@@ -192,9 +206,7 @@ export const SitterPost = () => {
           )}
         </Accordion>
         <Flex p={4} justifyContent="flex-end" gap={4}>
-          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
-            {applied ? 'Applied' : 'Apply'}
-          </Button>
+            {isActive(post.status)}
         </Flex>
       </Card>
     </div>
