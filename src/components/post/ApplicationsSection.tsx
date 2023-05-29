@@ -1,7 +1,7 @@
 import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Button, Divider, Flex, Heading, Icon, Spacer, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { Applications } from "../../interfaces/AppInterfaces";
 import api from "../../api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
 import { SitterRatingModal } from "../rating/SitterRatingModal";
@@ -17,6 +17,15 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
   const [ratingsEmail, setRatingsEmail] = useState<string | null>(null);
   const toast = useToast();
   const dispatch = useAppDispatch();
+  const [select, setSelected] = useState(false);
+  
+  useEffect(() => {
+    for (let i = 0; i < applicants.length; i++) {
+      if (applicants[i].status === 'accepted') {
+        setSelected(true)
+      }
+    }
+  }, [applicants])
 
   const onSelect = async (applicant: Applications) => {
     setLoading(true);
@@ -26,6 +35,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
       }});
       toast({ title: 'Applicant selected successfully!', status: 'success' });
       setLoading(false);
+      setSelected(true)
     } catch (error: any) {
       setLoading(false);
       if (error?.response && error.response.data.code === 401) {
@@ -64,6 +74,8 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
           {
             applicants.map((applicant: Applications) => (
               <>
+                {
+                  (applicant.status === 'accepted' || applicant.status === 'pending') &&
                 <Flex width="75%" alignItems="center" key={applicant.email}>
                   <Text mr={4}>{`${applicant.name} ${applicant.lastname}`}</Text>
                   <Spacer />
@@ -77,7 +89,9 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
                   >
                     See ratings
                   </Button>
-                  <Button
+                  {
+                    !select &&
+                    <Button
                     colorScheme="teal"
                     size="sm"
                     onClick={() => { onSelect(applicant) }}
@@ -85,7 +99,10 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
                   >
                     Select
                   </Button>
-                </Flex>
+                  }
+
+                  </Flex>
+                }
                 <Divider width="75%" />
               </>
             ))
