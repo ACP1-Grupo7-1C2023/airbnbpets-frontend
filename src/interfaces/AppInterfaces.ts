@@ -4,6 +4,8 @@ export enum UserType {
 }
 
 export interface Post {
+  status: string;
+  applicantEmail: string;
   id: number;
   title: string;
   description: string;
@@ -19,6 +21,7 @@ export interface Applications {
   name: string;
   lastname: string;
   email: string;
+  status: string;
 }
 
 export interface Qualification {

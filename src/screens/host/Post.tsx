@@ -120,10 +120,8 @@ export const HostPost = () => {
             <Text>
               {post.hostEmail}
             </Text>
-            {qualifications.length > 0 ? (
+            {qualifications.length > 0 && (
               <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
-            ) : (
-              <Text fontSize="sm" px="8px">No ratings</Text>
             )}
             <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See ratings</Button>
           </Flex>
