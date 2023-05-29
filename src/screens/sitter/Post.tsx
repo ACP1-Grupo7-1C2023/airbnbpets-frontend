@@ -77,7 +77,6 @@ export const SitterPost = () => {
   }
 
   const newQualification = async (score: number, rating: string) => {
-    console.log(score, rating);
     try {
       setLoading(true);
       await api.post("/qualify/user", {
@@ -109,18 +108,26 @@ export const SitterPost = () => {
     }
   }
 
-  const isActive = (status: string ) => {
-    if (status == 'active'){
+  const isActive = (currentPost: Post) => {
+    if (currentPost.status === 'active'){
       return (
       <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
         {applied ? 'Applied' : 'Apply'}
       </Button>)
     }
+    if (currentPost.applicantEmail === session?.email) {
+      return (
+        <Text fontSize="md" color="green.500">
+          Your application was accepted
+        </Text>
+      );
+    }
+
     return (
-      <Button colorScheme="red" size="lg" isLoading={loading} isDisabled={true}>
-        Closed
-      </Button>
-    )
+      <Text fontSize="md" color="red.500">
+        Your application was rejected
+      </Text>
+    );
   }
 
   if (!post) {
@@ -161,7 +168,7 @@ export const SitterPost = () => {
         qualifications={qualifications}
         onNewQualification={newQualification}
         loading={loading}
-        canAdd
+        canAdd={post.applicantEmail === session?.email}
       />
       <Card w="1000px" my={6}>
         <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate(-1); }}>
@@ -180,10 +187,8 @@ export const SitterPost = () => {
             <Text>
               {post.hostEmail}
             </Text>
-            {qualifications.length > 0 ? (
+            {qualifications.length > 0 && (
               <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
-            ) : (
-              <Text fontSize="sm" px="8px">No ratings</Text>
             )}
             <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See ratings</Button>
           </Flex>
@@ -205,8 +210,8 @@ export const SitterPost = () => {
             <PetsSection pets={post.petUrls} />
           )}
         </Accordion>
-        <Flex p={4} justifyContent="flex-end" gap={4}>
-            {isActive(post.status)}
+        <Flex p={4} justifyContent="center" gap={4}>
+          {isActive(post)}
         </Flex>
       </Card>
     </div>
