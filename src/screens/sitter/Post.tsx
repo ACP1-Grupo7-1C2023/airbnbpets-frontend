@@ -195,7 +195,7 @@ export const SitterPost = () => {
           <Flex direction='row' align='center' gap={2}>
             <Icon as={MdLocationPin} />
             <Text>
-              {post.location}
+              {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
             </Text>
           </Flex>
           <Flex direction='row' align='center' gap={2}>

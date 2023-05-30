@@ -4,11 +4,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useState } from "react";
-import { Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
+import { Box, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { ImagesPicker } from "../ImagesPicker";
 import { logout } from "../../state/actions";
+import { MapComponent } from "./MapComponent";
+import { reverseGeocode } from "../../utils/geoCoding";
 
 type PostInputs = {
   title: string;
@@ -43,6 +45,7 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
     images: [],
     previews: []
   });
+  const [position, setPosition] = useState<{ latitude: number, longitude: number }>();
 
   const onSubmit = async (data: PostInputs) => {
     setLoading(true);
@@ -124,7 +127,6 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
                 />
               </div>
               {errors.title && <p className="login-form-input-error">{errors.title.message}</p>}
-
               <Text ml={1} color="#535657">Description</Text>
               <div className={errors.description ? "login-form-item-error" : "login-form-item"}>
                 <input
@@ -135,19 +137,18 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
                 />
               </div>
               {errors.description && <p className="login-form-input-error">{errors.description.message}</p>}
-    
               <Text ml={1} color="#535657">Location</Text>
-              <div className={errors.location ? "login-form-item-error" : "login-form-item"}>
-                <input
-                  className="login-form-input"
-                  type="text"
-                  placeholder="Enter city"
-                  {...register("location")}
-                  maxLength={30}
-                />
-              </div>
+              <Box p={16} h={800}>
+                <MapComponent position={position} onChangePosition={(position) => {
+                  setPosition(position)
+                  reverseGeocode(position.latitude, position.longitude).then((res) => {
+                    register("location", {
+                      value: `${position.latitude}|${position.longitude}|${res}`
+                    });
+                  })
+                }}/>
+              </Box>
               {errors.location && <p className="login-form-input-error">{errors.location.message}</p>}
-    
               <Text ml={1} color="#535657">Start date</Text>
               <div className={errors.startAt ? "login-form-item-error" : "login-form-item"}>
                 <input
