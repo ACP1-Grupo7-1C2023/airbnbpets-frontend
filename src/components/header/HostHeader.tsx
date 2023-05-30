@@ -18,6 +18,9 @@ export const HostHeader = () => {
         <a className={`header_link ${location.pathname === "/posts" && "header_link_active"}`} href="/posts">
           My Posts
         </a>
+        <a className={`header_link ${location.pathname === "/subscriptions" && "header_link_active"}`} href="/subscriptions">
+          Subscriptions
+        </a>
       </div>
       <div className="header_button_container">
         <button className="main_button" onClick={onLogout}>

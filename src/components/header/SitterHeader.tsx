@@ -21,6 +21,9 @@ export const SitterHeader = () => {
         <a className={`header_link ${location.pathname === "/applications" && "header_link_active"}`} href="/applications">
           My Applications
         </a>
+        <a className={`header_link ${location.pathname === "/subscriptions" && "header_link_active"}`} href="/subscriptions">
+          Subscriptions
+        </a>
       </div>
       <div className="header_button_container">
         <button className="main_button" onClick={onLogout}>
