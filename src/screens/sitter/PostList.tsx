@@ -159,7 +159,7 @@ export const PostList = () => {
                   <PopoverCloseButton />
                   <PopoverHeader>Pick a location</PopoverHeader>
                   <PopoverBody>
-                    <Box h={300} w={300}>
+                    <Box mb={16} h={300} w={300}>
                       <MapComponent position={filters.location} onChangePosition={(position) => {
                         setFilters({ ...filters, location: position });
                       }} />

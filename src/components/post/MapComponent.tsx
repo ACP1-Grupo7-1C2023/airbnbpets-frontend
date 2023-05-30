@@ -1,9 +1,12 @@
 import { Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
-
 import Map, { Marker } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibmFodWNhc3RybyIsImEiOiJjbGlhYTAwcmgwMWRmM2VseDkyNWhjaDR1In0.tHQepuLTFZYdI8XuIpyBjg'; // Set your mapbox token here
+import mapboxgl from "mapbox-gl";
+
+// eslint-disable-next-line import/no-webpack-loader-syntax
+(mapboxgl as any).workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibmFodWNhc3RybyIsImEiOiJjbGlhYTAwcmgwMWRmM2VseDkyNWhjaDR1In0.tHQepuLTFZYdI8XuIpyBjg';
 
 type MapComponentProps = {
   position: { latitude: number, longitude: number } | undefined,
@@ -27,6 +30,7 @@ export const MapComponent = ({position, onChangePosition}: MapComponentProps) =>
       })}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
+      style={{ marginBottom: '10px'}}
     >
       {position && (
         <Marker longitude={position.longitude} latitude={position.latitude} color="red" />
