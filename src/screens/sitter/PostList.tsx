@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormLabel, Input,
+  NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField,
+  NumberInputStepper, Popover, PopoverArrow, PopoverBody, PopoverCloseButton,
+  PopoverContent, PopoverHeader, PopoverTrigger, Skeleton, Slider, SliderFilledTrack,
+  SliderThumb, SliderTrack, Stack, Text, Tooltip } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
 import { PostItem, PostsList } from "../../components/post/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 import "../../styles/Search.scss"
+import { MapComponent } from "../../components/post/MapComponent";
+import { getDistance } from "../../utils/geoCoding";
 
 type Filters = {
-  location: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  } | undefined;
+  radio: number;
   startAt: string;
   finishAt: string;
 }
@@ -18,15 +28,18 @@ export const PostList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filters, setFilters] = useState<Filters>({
-    location: '',
+    location: undefined,
+    radio: 20,
     startAt: '',
     finishAt: ''
   });
   const [currentFilters, setCurrentFilters] = useState<Filters>({
-    location: '',
+    location: undefined,
+    radio: 20,
     startAt: '',
     finishAt: ''
   });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -75,7 +88,7 @@ export const PostList = () => {
               </FormControl>
               <FormControl isDisabled>
                 <FormLabel>Location</FormLabel>
-                <Input type="text" placeholder="Location" />
+                <Button isDisabled>Open Map</Button>
               </FormControl>
             </Flex>
             <Button isDisabled size="lg" pt="4" pb="4" pl="8" pr="8" colorScheme="blue">Search</Button>
@@ -137,12 +150,53 @@ export const PostList = () => {
             </FormControl>
             <FormControl>
               <FormLabel>Location</FormLabel>
-              <Input onChange={(e) => {
-                setFilters({
-                  ...filters,
-                  location: e.target.value
-                })
-              }} type="text" placeholder="Location" />
+              <Popover>
+                <PopoverTrigger>
+                  <Button>Open Map</Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverHeader>Pick a location</PopoverHeader>
+                  <PopoverBody>
+                    <Box h={300} w={300}>
+                      <MapComponent position={filters.location} onChangePosition={(position) => {
+                        setFilters({ ...filters, location: position });
+                      }} />
+                    </Box>
+                    <Flex alignItems="center" justifyContent="center">
+                      <Flex p={2} flex="1" flexDirection="column">
+                        <Text>Select location range:</Text>
+                        <Slider
+                          flex='1'
+                          focusThumbOnChange={false}
+                          value={filters.radio}
+                          min={1}
+                          max={200}
+                          onChange={(value) => {setFilters({ ...filters, radio: value })}}
+                          onMouseEnter={() => setShowTooltip(true)}
+                          onMouseLeave={() => setShowTooltip(false)}
+                        >
+                          <SliderTrack>
+                            <SliderFilledTrack />
+                          </SliderTrack>
+                          <Tooltip
+                            hasArrow
+                            bg='teal.500'
+                            color='white'
+                            placement='top'
+                            isOpen={showTooltip}
+                            label={`${filters.radio}km`}
+                          >
+                            <SliderThumb borderColor="teal" borderWidth={4}/>
+                          </Tooltip>
+                        </Slider>
+                      </Flex>
+                      <Button ml={8} onClick={() => {setFilters({ ...filters, location: undefined })}}>Clear</Button>
+                    </Flex>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
             </FormControl>
           </Flex>
           <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
@@ -155,9 +209,19 @@ export const PostList = () => {
           </div>
         )}
         {posts
-          .filter((post) => (currentFilters.location !== "")
-            ? post.location.toLowerCase().includes(currentFilters.location.toLocaleLowerCase())
-            : true)
+          .filter((post) => {
+            if (currentFilters.location) {
+              const [postLatitude, postLongitude] = post.location.split('|').map((value) => parseFloat(value));
+              const distance = getDistance(
+                { latitude: postLatitude, longitude: postLongitude },
+                { latitude: currentFilters.location.latitude, longitude: currentFilters.location.longitude }
+              );
+              console.log(distance);
+              return distance <= currentFilters.radio;
+            } else {
+              return true;
+            }
+          })
           .filter((post) => (currentFilters.startAt !== "") ? post.startat.split('T')[0] === currentFilters.startAt : true)
           .filter((post) => (currentFilters.finishAt !== "") ? post.finishat.split('T')[0] === currentFilters.finishAt : true)
           .map((post) => (
