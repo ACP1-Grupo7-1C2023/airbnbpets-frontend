@@ -1,5 +1,4 @@
-import { Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Map, { Marker } from 'react-map-gl';
 import mapboxgl from "mapbox-gl";
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -31,7 +30,6 @@ export const MapComponent = ({position, onChangePosition}: MapComponentProps) =>
       })}
       mapStyle="mapbox://styles/mapbox/streets-v9"
       mapboxAccessToken={MAPBOX_TOKEN}
-      style={{ marginBottom: '10px'}}
     >
       {position && (
         <Marker longitude={position.longitude} latitude={position.latitude} color="red" />

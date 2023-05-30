@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Flex, FormControl, FormLabel, Input,
-  NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField,
-  NumberInputStepper, Popover, PopoverArrow, PopoverBody, PopoverCloseButton,
+  Popover, PopoverArrow, PopoverBody, PopoverCloseButton,
   PopoverContent, PopoverHeader, PopoverTrigger, Skeleton, Slider, SliderFilledTrack,
   SliderThumb, SliderTrack, Stack, Text, Tooltip } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
@@ -159,7 +158,7 @@ export const PostList = () => {
                   <PopoverCloseButton />
                   <PopoverHeader>Pick a location</PopoverHeader>
                   <PopoverBody>
-                    <Box mb={16} h={300} w={300}>
+                    <Box h={300} w={300}>
                       <MapComponent position={filters.location} onChangePosition={(position) => {
                         setFilters({ ...filters, location: position });
                       }} />
