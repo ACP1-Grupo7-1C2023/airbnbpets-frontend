@@ -8,6 +8,7 @@ import { MyPosts } from "../screens/host/MyPosts";
 import { HostPost } from "../screens/host/Post";
 import { SitterPost } from "../screens/sitter/Post";
 import { MyApplications } from "../screens/sitter/MyApplications";
+import { Subscriptions } from "../screens/Subscriptions";
 
 export const AppRouter = () => {
   const session = useAppSelector(auth => auth.auth.session);
@@ -21,12 +22,14 @@ export const AppRouter = () => {
               <Route path="/posts" element={<PostList />} />
               <Route path="/post/:id" element={<SitterPost />} />
               <Route path="/applications" element={<MyApplications />} />
+              <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           ) : (
             <>
               <Route path="/posts" element={<MyPosts />} />
               <Route path="/post/:id" element={<HostPost />} />
+              <Route path="/subscriptions" element={<Subscriptions />} />
               <Route path="*" element={<Navigate replace to="/posts" />} />
             </>
           )
