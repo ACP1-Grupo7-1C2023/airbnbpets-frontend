@@ -55,14 +55,16 @@ export const Subscriptions = () => {
                   <Text key={index} fontSize='lg' className="sub_feature">{feature}</Text>
                 ))}
               </div>
-              <Button 
-                className={`select_sub_btn ${selected === sub.name && "select_sub_btn_disabled"}`}
-                onClick={() => onSubSelect(sub.name)}
-              >
-                <Text fontSize='lg' fontWeight="bold">
-                  {selected === sub.name ? "Selected" : "Select"}
-                </Text>
-              </Button>
+              {sub.name !== "Basic" && (
+                <Button 
+                  className={`select_sub_btn ${selected === sub.name && "select_sub_btn_disabled"}`}
+                  onClick={() => onSubSelect(sub.name)}
+                >
+                  <Text fontSize='lg' fontWeight="bold">
+                    {selected === sub.name ? "Selected" : "Upgrade"}
+                  </Text>
+                </Button>
+              )}
             </CardBody>
           </Card>
         ))}
