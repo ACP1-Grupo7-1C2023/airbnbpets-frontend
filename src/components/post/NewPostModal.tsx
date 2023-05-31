@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useState } from "react";
-import { Box, Center, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
+import { Box, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { ImagesPicker } from "../ImagesPicker";
@@ -34,7 +34,6 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
   });
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const toast = useToast();
   const session = useAppSelector(state => state.auth.session);
   const [homeImages, setHomeImages] = useState<{ images: any[], previews: string[] }>({
@@ -49,11 +48,6 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
 
   const onSubmit = async (data: PostInputs) => {
     setLoading(true);
-    if (!session) {
-      setError('You must be logged in to post');
-      setLoading(false);
-      return;
-    }
     try {
       const startAt = new Date(data.startAt).toISOString().split('T')[0];
       const finishAt = new Date(data.finishAt).toISOString().split('T')[0];
@@ -64,8 +58,8 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
       for (let i = 0; i < petsImages.images.length; i++) {
         formData.append('pet', petsImages.images[i]);
       }
-      formData.append('hostEmail', session.email);
-      formData.append('hostType', session.type);
+      formData.append('hostEmail', session?.email || "");
+      formData.append('hostType', session?.type || "");
       formData.append('title', data.title);
       formData.append('description', data.description);
       formData.append('location', data.location);
@@ -74,7 +68,7 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
       await api.post('/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${session.token}`
+          'Authorization': `Bearer ${session?.token}`
         }
       });
       reset();
@@ -85,10 +79,12 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
     } catch (error: any) {
       if (error?.response?.status === 401) {
         dispatch(logout());
+      } else if (error?.response && error.response.data.detail) {
+        toast({ title: error.response.data.detail, status: 'error' });
       } else {
-        setLoading(false);
-        setError('Something went wrong, try again later');
+        toast({ title: 'Something went wrong, try again later', status: 'error' });
       }
+      setLoading(false);
     }
   };
 
@@ -173,7 +169,6 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
             <Heading size="md" mt={5} mb={2}>Pets</Heading>
             <ImagesPicker images={petsImages?.previews} onChanges={(e) => { selectImages(e, "pets") }} />
             </form>
-            {error && <p className="login-error">{error}</p>}
           </ModalBody>
           <ModalFooter>
             <button className="main_button" disabled={loading} onClick={handleSubmit(onSubmit)}>{

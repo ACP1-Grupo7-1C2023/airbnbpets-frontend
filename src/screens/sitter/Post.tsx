@@ -70,6 +70,8 @@ export const SitterPost = () => {
         dispatch(logout());
       } else if (error?.response?.data?.name === "ApplicationAlreadyError") {
         toast({ title: "You already applied to this post", status: "error" });
+      } else if (error?.response && error.response.data.detail) {
+        toast({ title: error.response.data.detail, status: "error" });
       } else {
         toast({ title: "Something went wrong, try again later", status: "error" });
       }

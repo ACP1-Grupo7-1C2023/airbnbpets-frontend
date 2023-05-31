@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Button, Card, CardBody, Heading, Text } from "@chakra-ui/react";
+import { Button, Card, CardBody, Heading, Text, useToast } from "@chakra-ui/react";
 import { HostHeader } from "../components/header/HostHeader";
 import { SitterHeader } from "../components/header/SitterHeader";
 import { UserType } from "../interfaces/AppInterfaces";
-import { useAppSelector } from "../state";
+import { useAppDispatch, useAppSelector } from "../state";
 import "../styles/Subscriptions.scss"
+import api from "../api";
+import { logout } from "../state/actions";
 
 const Subs = [
   {
@@ -28,10 +30,28 @@ const Subs = [
 export const Subscriptions = () => {
   const session = useAppSelector(auth => auth.auth.session);
   const [selected, setSelected] = useState<string>("Basic");
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const dispatch = useAppDispatch();
 
-  const onSubSelect = (sub: string) => {
-    // TODO: integrar api
+  const onSubSelect = async (sub: string) => {
+    if (sub === selected) return;
     setSelected(sub);
+    setLoading(true);
+    try {
+      await api.post('/subscription', { email: session?.email, type: session?.type }, {
+        headers: { 'Authorization': `Bearer ${session?.token}` }
+      });
+      setLoading(false);
+      toast({ title: 'Subscription upgraded successfully!', status: 'success' });
+    } catch (error: any) {
+      if (error?.response && error.response.data.code === 401) {
+        dispatch(logout());
+      } else {
+        setLoading(false);
+        toast({ title: 'Something went wrong, try again later', status: 'error' });
+      }
+    }
   };
 
   return (
@@ -59,6 +79,7 @@ export const Subscriptions = () => {
                 <Button 
                   className={`select_sub_btn ${selected === sub.name && "select_sub_btn_disabled"}`}
                   onClick={() => onSubSelect(sub.name)}
+                  isLoading={loading}
                 >
                   <Text fontSize='lg' fontWeight="bold">
                     {selected === sub.name ? "Selected" : "Upgrade"}
