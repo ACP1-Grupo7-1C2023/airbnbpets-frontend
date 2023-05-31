@@ -1,7 +1,6 @@
 import "../../styles/Post.scss";
 import { useEffect, useState } from "react";
 import { HostHeader } from "../../components/header/HostHeader";
-import { PostItem, PostsList } from "../../components/post/PostItem";
 import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import Icon from '@chakra-ui/icon';
 import { HiOutlinePlus } from 'react-icons/hi';
@@ -10,6 +9,7 @@ import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { logout } from "../../state/actions";
 import { ShowError } from "../../components/ShowError";
+import { PostItemHost, PostsList } from "../../components/post/PostItemHost";
 
 export const MyPosts = () => {
   const [posts, setPosts] = useState<PostsList>([]);
@@ -92,7 +92,7 @@ export const MyPosts = () => {
           </div>
         )}
         {posts.map((post) => (
-          <PostItem key={post.id} post={post} />
+          <PostItemHost key={post.id} post={post} />
         ))}
       </div>
       <button className="main_button post_add_post_button" onClick={onPostClick}>

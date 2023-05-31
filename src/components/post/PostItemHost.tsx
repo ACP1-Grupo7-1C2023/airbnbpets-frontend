@@ -11,13 +11,13 @@ interface Post {
   title: string;
   description: string;
   location: string;
-  startAt: string;
-  finishAt: string;
-  homeUrls: string[];
-  petUrls: string[];
+  startat: string;
+  finishat: string;
+  homeUrls?: string[];
+  petUrls?: string[];
 }
 
-export const PostItem = ({ post }: { post: Post }) => {
+export const PostItemHost = ({ post }: { post: Post }) => {
   const navigate = useNavigate();
 
   const onClick = () => {
@@ -50,7 +50,7 @@ export const PostItem = ({ post }: { post: Post }) => {
               <Flex direction='row' align='center' gap={1}>
                 <Icon as={MdCalendarMonth} />
                 <Text>
-                  {parseDate(post.startAt)} - {parseDate(post.finishAt)}
+                  {parseDate(post.startat)} - {parseDate(post.finishat)}
                 </Text>
               </Flex>
             </Flex>
