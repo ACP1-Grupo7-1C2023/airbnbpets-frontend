@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Flex, Heading, Text } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Flex, Heading, Image, Text, VStack } from "@chakra-ui/react";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../../utils/date";
@@ -11,8 +11,10 @@ interface Post {
   title: string;
   description: string;
   location: string;
-  startat: string;
-  finishat: string;
+  startAt: string;
+  finishAt: string;
+  homeUrls: string;
+  petUrls: string;
 }
 
 export const PostItem = ({ post }: { post: Post }) => {
@@ -29,28 +31,35 @@ export const PostItem = ({ post }: { post: Post }) => {
     }}
       onClick={onClick}
     >
-      <CardHeader>
-        <Heading size='md'>{post.title}</Heading>
-      </CardHeader>
-      <CardBody pt={0}>
-        <Text fontSize='sm'>
-          {post.description}
-        </Text>
-        <Flex direction='column' mt={4}>
-          <Flex direction='row' align='center' gap={1}>
-            <Icon as={MdLocationPin} />
-            <Text>
-              {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
+      <Flex dir="row">
+        <div style={{ flex: 1 }}>
+          <CardHeader>
+            <Heading size='md'>{post.title}</Heading>
+          </CardHeader>
+          <CardBody pt={0}>
+            <Text fontSize='sm'>
+              {post.description}
             </Text>
-          </Flex>
-          <Flex direction='row' align='center' gap={1}>
-            <Icon as={MdCalendarMonth} />
-            <Text>
-              {parseDate(post.startat)} - {parseDate(post.finishat)}
-            </Text>
-          </Flex>
-        </Flex>
-      </CardBody>
+            <Flex direction='column' mt={4}>
+              <Flex direction='row' align='center' gap={1}>
+                <Icon as={MdLocationPin} />
+                <Text>
+                  {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
+                </Text>
+              </Flex>
+              <Flex direction='row' align='center' gap={1}>
+                <Icon as={MdCalendarMonth} />
+                <Text>
+                  {parseDate(post.startAt)} - {parseDate(post.finishAt)}
+                </Text>
+              </Flex>
+            </Flex>
+          </CardBody>
+        </div>
+        {post.homeUrls?.length > 0 && (
+          <Image src={post.homeUrls[0]} w="200px" h="auto" objectFit="cover" margin="20px" />
+        )}
+      </Flex>
     </Card>
   )
 }

@@ -221,8 +221,8 @@ export const PostList = () => {
               return true;
             }
           })
-          .filter((post) => (currentFilters.startAt !== "") ? post.startat.split('T')[0] === currentFilters.startAt : true)
-          .filter((post) => (currentFilters.finishAt !== "") ? post.finishat.split('T')[0] === currentFilters.finishAt : true)
+          .filter((post) => (currentFilters.startAt !== "") ? post.startAt.split('T')[0] === currentFilters.startAt : true)
+          .filter((post) => (currentFilters.finishAt !== "") ? post.finishAt.split('T')[0] === currentFilters.finishAt : true)
           .map((post) => (
           <PostItem key={post.id} post={post} />
         ))}
