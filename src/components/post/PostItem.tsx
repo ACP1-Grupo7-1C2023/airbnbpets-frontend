@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Flex, Heading, Image, Text, VStack } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../../utils/date";

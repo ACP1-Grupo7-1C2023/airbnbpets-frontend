@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Flex, FormControl, FormLabel, Input,
-  Popover, PopoverArrow, PopoverBody, PopoverCloseButton,
-  PopoverContent, PopoverHeader, PopoverTrigger, Skeleton, Slider, SliderFilledTrack,
-  SliderThumb, SliderTrack, Stack, Text, Tooltip } from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
 import { PostItem, PostsList } from "../../components/post/PostItem";
 import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 import "../../styles/Search.scss"
-import { MapComponent } from "../../components/post/MapComponent";
 import { getDistance } from "../../utils/geoCoding";
+import { MapModal } from "../../components/MapModal";
 
 type Filters = {
   location: {
@@ -38,7 +35,7 @@ export const PostList = () => {
     startAt: '',
     finishAt: ''
   });
-  const [showTooltip, setShowTooltip] = useState(false);
+  const [mapModal, setMapModal] = useState(true);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -116,10 +113,24 @@ export const PostList = () => {
   return (
     <div className="post_container">
       <SitterHeader />
+      <MapModal
+        isOpen={mapModal}
+        onClose={() => { setMapModal(false) }}
+        markers={posts.map((p) => {
+          const [latitude, longitude] = p.location.split('|').map((value) => parseFloat(value));
+          return {
+            latitude,
+            longitude,
+            id: p.id,
+            title: p.title,
+            image: p.homeUrls[0] || '',
+            description: p.description,
+          }
+        })}/>
       <div className="post_list_container">
         <Flex
           direction="column"
-          gap="4"
+          gap="2"
           mb="2"
           borderRadius="16"
           py="4"
@@ -147,57 +158,10 @@ export const PostList = () => {
                 })
               }} type="date" /> 
             </FormControl>
-            <FormControl>
-              <FormLabel>Location</FormLabel>
-              <Popover>
-                <PopoverTrigger>
-                  <Button>Open Map</Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverCloseButton />
-                  <PopoverHeader>Pick a location</PopoverHeader>
-                  <PopoverBody>
-                    <Box h={300} w={300}>
-                      <MapComponent position={filters.location} onChangePosition={(position) => {
-                        setFilters({ ...filters, location: position });
-                      }} />
-                    </Box>
-                    <Flex alignItems="center" justifyContent="center">
-                      <Flex p={2} flex="1" flexDirection="column">
-                        <Text>Select location range:</Text>
-                        <Slider
-                          flex='1'
-                          focusThumbOnChange={false}
-                          value={filters.radio}
-                          min={1}
-                          max={200}
-                          onChange={(value) => {setFilters({ ...filters, radio: value })}}
-                          onMouseEnter={() => setShowTooltip(true)}
-                          onMouseLeave={() => setShowTooltip(false)}
-                        >
-                          <SliderTrack>
-                            <SliderFilledTrack />
-                          </SliderTrack>
-                          <Tooltip
-                            hasArrow
-                            bg='teal.500'
-                            color='white'
-                            placement='top'
-                            isOpen={showTooltip}
-                            label={`${filters.radio}km`}
-                          >
-                            <SliderThumb borderColor="teal" borderWidth={4}/>
-                          </Tooltip>
-                        </Slider>
-                      </Flex>
-                      <Button ml={8} onClick={() => {setFilters({ ...filters, location: undefined })}}>Clear</Button>
-                    </Flex>
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-            </FormControl>
           </Flex>
+          <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
+            setMapModal(true);
+          }}>Open Map</Button>
           <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
             setCurrentFilters({ ...filters });
           }} colorScheme="blue">Search</Button>
