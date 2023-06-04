@@ -123,7 +123,7 @@ export const HostPost = () => {
             {qualifications.length > 0 && (
               <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
             )}
-            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>See ratings</Button>
+            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>Ratings</Button>
           </Flex>
           <Flex direction='row' align='center' gap={2}>
             <Icon as={MdLocationPin} />

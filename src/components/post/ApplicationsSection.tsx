@@ -94,7 +94,7 @@ export const ApplicationsSection = ({ applicants, postId }: ApplicationsSectionP
                     }}
                     mr="6px"
                   >
-                    See ratings
+                    Ratings
                   </Button>
                   {applicant.status === 'accepted' || selected === applicant.email ? (
                     <Text color="green.500" ml="10px">Accepted</Text>
