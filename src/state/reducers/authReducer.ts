@@ -22,6 +22,8 @@ const authReducer: Reducer<AuthState, AnyAction> = (state = initialState, action
       return { session: action.payload };
     case "LOGOUT":
       return { session: null };
+    case "CHANGE_SUB":
+      return state.session ? { session: { ...state.session, subscription: action.payload } } : { session: null };
     default:
       return state;
   }

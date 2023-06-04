@@ -33,7 +33,7 @@ export const signup = (name: string, lastName: string, email: string, password: 
   try {
     let response = await axios.post(`${baseURL}/users`, { name, lastName, email, password, type });
     response = await axios.post(`${baseURL}/login`, { email, password, type });
-    dispatch({ type: "LOGIN", payload: { token: response.data, email, type }});
+    dispatch({ type: "LOGIN", payload: { token: response.data.token, email, type, subscription: response.data.subscription }});
   } catch (e) {
     if (axios.isAxiosError(e)) {
       throw e.response?.data ?? 'Unexpected error occurred';

@@ -45,6 +45,7 @@ export const Subscriptions = () => {
         headers: { 'Authorization': `Bearer ${session?.token}` }
       });
       setLoading(false);
+      dispatch({ type: "CHANGE_SUB", payload: sub });
       toast({ title: 'Subscription upgraded successfully!', status: 'success' });
     } catch (error: any) {
       if (error?.response && error.response.data.code === 401) {
@@ -77,14 +78,14 @@ export const Subscriptions = () => {
                   <Text key={index} fontSize='lg' className="sub_feature">{feature}</Text>
                 ))}
               </div>
-              {sub.name !== "Basic" && (
+              {sub.id !== SubType.Basic && (
                 <Button 
-                  className={`select_sub_btn ${selected === sub.name && "select_sub_btn_disabled"}`}
-                  onClick={() => onSubSelect(sub.name)}
+                  className={`select_sub_btn ${selected === sub.id && "select_sub_btn_disabled"}`}
+                  onClick={() => onSubSelect(sub.id)}
                   isLoading={loading}
                 >
                   <Text fontSize='lg' fontWeight="bold">
-                    {selected === sub.name ? "Selected" : "Upgrade"}
+                    {selected === sub.id ? "Selected" : "Upgrade"}
                   </Text>
                 </Button>
               )}
