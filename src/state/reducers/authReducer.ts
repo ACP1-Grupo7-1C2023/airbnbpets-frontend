@@ -5,6 +5,7 @@ export type Session = {
   token: string;
   email: string;
   type: UserType;
+  subscription: string;
 }
 
 export type AuthState = {

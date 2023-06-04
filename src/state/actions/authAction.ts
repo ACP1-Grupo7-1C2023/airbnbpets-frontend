@@ -15,7 +15,7 @@ export type AuthAction = {
 export const login = (email: string, password: string, type: UserType) => async (dispatch: AppDispatch) => {
   try {
     const response = await axios.post(`${baseURL}/login`, { email, password, type });
-    dispatch({ type: "LOGIN", payload: { token: response.data, email, type } });
+    dispatch({ type: "LOGIN", payload: { token: response.data.token, email, type, subscription: response.data.subscription } });
   } catch (e) {
     if (axios.isAxiosError(e)) {
       throw e.response?.data ?? 'Unexpected error occurred';

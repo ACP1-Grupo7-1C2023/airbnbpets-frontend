@@ -3,6 +3,11 @@ export enum UserType {
   Host = 'host'
 }
 
+export enum SubType {
+  Basic = 'basic',
+  Premium = 'premium'
+}
+
 export interface Post {
   status: string;
   applicantEmail: string;

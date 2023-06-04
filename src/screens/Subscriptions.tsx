@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Card, CardBody, Heading, Text, useToast } from "@chakra-ui/react";
 import { HostHeader } from "../components/header/HostHeader";
 import { SitterHeader } from "../components/header/SitterHeader";
-import { UserType } from "../interfaces/AppInterfaces";
+import { SubType, UserType } from "../interfaces/AppInterfaces";
 import { useAppDispatch, useAppSelector } from "../state";
 import "../styles/Subscriptions.scss"
 import api from "../api";
@@ -10,6 +10,7 @@ import { logout } from "../state/actions";
 
 const Subs = [
   {
+    id: SubType.Basic,
     name: "Basic",
     features: [
       "Access to all the app's features",
@@ -18,6 +19,7 @@ const Subs = [
     ],
   },
   {
+    id: SubType.Premium,
     name: "Premium",
     features: [
       "Access to all the app's features",
@@ -29,7 +31,7 @@ const Subs = [
 
 export const Subscriptions = () => {
   const session = useAppSelector(auth => auth.auth.session);
-  const [selected, setSelected] = useState<string>("Basic");
+  const [selected, setSelected] = useState<string>(session?.subscription || SubType.Basic);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const dispatch = useAppDispatch();
