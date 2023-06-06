@@ -110,13 +110,30 @@ export const SitterPost = () => {
     }
   }
 
+  const applicantsText = () => {
+    let applicants = post?.applicants || 0;
+    if (applied) {
+      applicants++;
+    }
+    if (applicants === 0) {
+      return "Be the first to apply!";
+    }
+    if (applicants === 1) {
+      return "1 applicant";
+    }
+    return applicants ? `${applicants} applicants` : "";
+  }
+
   const isActive = (currentPost: Post) => {
     if (currentPost.status === 'active'){
       return (
-      <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
-        {applied ? 'Applied' : 'Apply'}
-      </Button>)
-    }
+        <>
+          <Text>{applicantsText()}</Text>
+          <Button colorScheme="green" size="lg" isLoading={loading} onClick={apply} isDisabled={applied}>
+            {applied ? 'Applied' : 'Apply'}
+          </Button>
+        </>
+    )}
     if (currentPost.applicantEmail === session?.email) {
       return (
         <Text fontSize="md" color="green.500">
@@ -212,7 +229,7 @@ export const SitterPost = () => {
             <PetsSection pets={post.petUrls} />
           )}
         </Accordion>
-        <Flex p={4} justifyContent="center" gap={4}>
+        <Flex p={4} justifyContent="flex-end" alignItems="center" gap={4}>
           {isActive(post)}
         </Flex>
       </Card>
