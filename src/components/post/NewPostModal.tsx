@@ -90,7 +90,7 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
     } catch (error: any) {
       if (error?.response?.status === 401) {
         dispatch(logout());
-      } else if (error?.response && error.response.data.detail) {
+      } else if (error?.response && error.response.data.detail && typeof error.response.data.detail === 'string') {
         toast({ title: error.response.data.detail, status: 'error' });
       } else {
         toast({ title: 'Something went wrong, try again later', status: 'error' });
