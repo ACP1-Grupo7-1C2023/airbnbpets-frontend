@@ -154,23 +154,23 @@ export const SitterPost = () => {
       <div>
         <SitterHeader />
         <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
-        <VStack mt="50px" ml="50px" mr="50px" mb="50px">
-          <Container maxW='md'>
-            <Skeleton height="200px" />
-          </Container>
-          <Container maxW='md'>
-            <SkeletonText noOfLines={1} skeletonHeight={8} />
-            <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
-          </Container>
-          <Flex direction='row' align='center' gap={2}>
-            <Icon as={MdLocationPin} />
-            <SkeletonText w="100px" noOfLines={1} skeletonHeight={2} />
-          </Flex>
-          <Flex direction='row' align='center' gap={2}>
-            <Icon as={MdCalendarMonth} />
-            <Text>
-              <SkeletonText w="200px" noOfLines={1} skeletonHeight={2} />
-            </Text>
+        <VStack w="1100px" mt="50px" ml="50px" mr="50px" mb="50px">
+          <Flex flexDirection="row" gap="50px">
+            <Skeleton height="250px" w="400px" />
+            <Flex flexDirection="column">
+              <SkeletonText noOfLines={1} skeletonHeight="36px" />
+              <SkeletonText mt='4' noOfLines={1} skeletonHeight="24px" />
+              <Flex direction='row' align='center' gap={2} mt="20px">
+                <Icon as={MdLocationPin} />
+                <SkeletonText w="100px" noOfLines={1} skeletonHeight={2} />
+              </Flex>
+              <Flex direction='row' align='center' gap={2} mt="10px">
+                <Icon as={MdCalendarMonth} />
+                <Text>
+                  <SkeletonText w="200px" noOfLines={1} skeletonHeight={2} />
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
         </VStack>
       </div>
@@ -189,39 +189,43 @@ export const SitterPost = () => {
         loading={loading}
         canAdd={post.applicantEmail === session?.email}
       />
-      <Card w="1000px" my={6}>
+      <Card w="1200px" my={6}>
         <button style={{ position: 'absolute', top: '20px', left: '20px' }} onClick={() => { navigate(-1); }}>
           <Icon as={FaArrowLeft} />
         </button>
         <VStack mt="50px" ml="50px" mr="50px" mb="50px">
-          {post.homeUrls.length > 0 && (
-            <Container maxW='md'>
-              <ImagesGallery images={post.homeUrls} />
-            </Container>
-          )}
-          <Heading size="lg">{post.title}</Heading>
-          <Text>{post.description}</Text>
-          <Flex direction='row' align='center' gap={2}>
-            <Icon as={MdPerson} />
-            <Text>
-              {post.hostEmail}
-            </Text>
-            {qualifications.length > 0 && (
-              <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
+          <Flex flexDirection="row" gap="50px">
+            {post.homeUrls.length > 0 && (
+              <Container maxW='400px'>
+                <ImagesGallery images={post.homeUrls} />
+              </Container>
             )}
-            <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>Ratings</Button>
-          </Flex>
-          <Flex direction='row' align='center' gap={2}>
-            <Icon as={MdLocationPin} />
-            <Text>
-              {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
-            </Text>
-          </Flex>
-          <Flex direction='row' align='center' gap={2}>
-            <Icon as={MdCalendarMonth} />
-            <Text>
-              {parseDate(post.startAt)} - {parseDate(post.finishAt)}
-            </Text>
+            <Container flex={1} m="0px">
+              <Heading size="lg">{post.title}</Heading>
+              <Text mt="4px">{post.description}</Text>
+              <Flex direction='row' align='center' gap={2} mt="20px">
+                <Icon as={MdPerson} />
+                <Text>
+                  {post.hostEmail}
+                </Text>
+                {qualifications.length > 0 && (
+                  <Stars score={Math.floor(qualifications.reduce((acc, curr) => acc + curr.score, 0) / qualifications.length)} />
+                )}
+                <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>Ratings</Button>
+              </Flex>
+              <Flex direction='row' align='center' gap={2} mt="8px">
+                <Icon as={MdLocationPin} />
+                <Text>
+                  {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
+                </Text>
+              </Flex>
+              <Flex direction='row' align='center' gap={2} mt="8px">
+                <Icon as={MdCalendarMonth} />
+                <Text>
+                  {parseDate(post.startAt)} - {parseDate(post.finishAt)}
+                </Text>
+              </Flex>
+            </Container>
           </Flex>
         </VStack>
         <Accordion defaultIndex={[0]} allowMultiple>
