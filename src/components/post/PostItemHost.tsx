@@ -1,8 +1,9 @@
-import { Card, CardBody, CardHeader, Flex, Heading, Image, Text, VStack } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Flex, Heading, Image, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../../utils/date";
 import { useNavigate } from "react-router-dom";
+import { PetTypeBadge } from "../PetTypeBadge";
 
 export type PostsList = Post[];
 
@@ -15,6 +16,7 @@ interface Post {
   finishat: string;
   homeUrls?: string[];
   petUrls?: string[];
+  pets: string[];
 }
 
 export const PostItemHost = ({ post }: { post: Post }) => {
@@ -54,6 +56,11 @@ export const PostItemHost = ({ post }: { post: Post }) => {
                 </Text>
               </Flex>
             </Flex>
+            <Stack mt={4} spacing={4} direction='row'>
+              {post.pets.map((pet) => (
+                <PetTypeBadge type={pet} />
+              ))}
+            </Stack>
           </CardBody>
         </div>
         {post.homeUrls && post.homeUrls.length > 0 && (

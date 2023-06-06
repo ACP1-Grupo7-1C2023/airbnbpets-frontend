@@ -1,4 +1,5 @@
 import { Badge } from "@chakra-ui/react"
+import { PetTypes } from "../interfaces/AppInterfaces";
 
 export const PetTypeBadge = ({ type }: { type: string }) => {
   const colorScheme = () => {
@@ -20,7 +21,7 @@ export const PetTypeBadge = ({ type }: { type: string }) => {
 
   return (
     <Badge colorScheme={colorScheme()}>
-      {type}
+      {PetTypes.includes(type) ? type : 'Other'}
     </Badge>
   );
 }
