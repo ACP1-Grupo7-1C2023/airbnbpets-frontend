@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Flex, Heading, Image, Stack, Text, VStack } from "@chakra-ui/react";
+import { Badge, Card, CardBody, CardHeader, Flex, Heading, Image, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from '@chakra-ui/react';
 import { MdLocationPin, MdCalendarMonth } from 'react-icons/md';
 import { parseDate } from "../../utils/date";
@@ -17,6 +17,7 @@ interface Post {
   homeUrls?: string[];
   petUrls?: string[];
   pets: string[];
+  status: string;
 }
 
 export const PostItemHost = ({ post }: { post: Post }) => {
@@ -35,8 +36,18 @@ export const PostItemHost = ({ post }: { post: Post }) => {
     >
       <Flex dir="row">
         <div style={{ flex: 1 }}>
-          <CardHeader>
+          <CardHeader display="flex" flexDirection="row" justifyContent="space-between" alignItems="flex-start" gap="8">
             <Heading size='md'>{post.title}</Heading>
+            {post.status === "active" && (
+              <Badge variant="subtle" py="1" px="2" colorScheme="green">
+                Open
+              </Badge>
+            )}
+            {post.status === "closed" && (
+              <Badge variant="subtle" py="1" px="2" colorScheme="red">
+                Closed
+              </Badge>
+            )}
           </CardHeader>
           <CardBody pt={0}>
             <Text fontSize='sm'>
@@ -56,11 +67,6 @@ export const PostItemHost = ({ post }: { post: Post }) => {
                 </Text>
               </Flex>
             </Flex>
-            <Stack mt={4} spacing={4} direction='row'>
-              {post.pets.map((pet) => (
-                <PetTypeBadge type={pet} />
-              ))}
-            </Stack>
           </CardBody>
         </div>
         {post.homeUrls && post.homeUrls.length > 0 && (
