@@ -4,13 +4,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { BeatLoader } from 'react-spinners';
 import { useState } from "react";
-import { Box, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useToast } from '@chakra-ui/react';
+import { Box, Checkbox, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, useToast } from '@chakra-ui/react';
 import api from "../../api";
 import { useAppDispatch, useAppSelector } from "../../state";
 import { ImagesPicker } from "../ImagesPicker";
 import { logout } from "../../state/actions";
 import { MapComponent } from "./MapComponent";
 import { reverseGeocode } from "../../utils/geoCoding";
+import { PetTypes } from "../../interfaces/AppInterfaces";
 
 type PostInputs = {
   title: string;
@@ -33,6 +34,8 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
     resolver: yupResolver(schema),
   });
   const dispatch = useAppDispatch();
+  const [petTypes, setPetTypes] = useState<string[]>([]);
+  const [petTypesError, setPetTypesError] = useState<string>();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const session = useAppSelector(state => state.auth.session);
@@ -58,6 +61,10 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
       setError('finishAt', { message: 'Finish date must be after start date' });
       return;
     }
+    if (petTypes.length === 0) {
+      setPetTypesError('You must select at least one pet type');
+      return;
+    }
     setLoading(true);
     try {
       const startAt = new Date(data.startAt).toISOString().split('T')[0];
@@ -76,6 +83,9 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
       formData.append('location', data.location);
       formData.append('startAt', startAt);
       formData.append('finishAt', finishAt);
+      petTypes.forEach((type) => {
+        formData.append("pets[]", type);
+      });
       await api.post('/posts', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -177,8 +187,24 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
                 />
               </div>
               {errors.finishAt && <p className="login-form-input-error">{errors.finishAt.message}</p>}
-            <Heading size="md" mt={5} mb={2}>Pets</Heading>
-            <ImagesPicker images={petsImages?.previews} onChanges={(e) => { selectImages(e, "pets") }} />
+              <Heading size="md" mt={5} mb={2}>Pets</Heading>
+              <Stack ml={1} mb={2} spacing={6} direction='row'>
+                {PetTypes.map((petType) => (
+                  <Checkbox colorScheme='green' key={petType} onChange={(e) => {
+                    if (e.target.checked) { 
+                      setPetTypesError(undefined);
+                      setPetTypes([...petTypes, petType])
+                    } else {
+                      setPetTypes(petTypes.filter((pet) => pet !== petType))
+                    }
+                  }}>
+                    {petType}
+                  </Checkbox>
+                ))}
+              </Stack>
+              {petTypesError && <p className="login-form-input-error">{petTypesError}</p>}
+              <div style={{ height: "8px" }}></div>
+              <ImagesPicker images={petsImages?.previews} onChanges={(e) => { selectImages(e, "pets") }} />
             </form>
           </ModalBody>
           <ModalFooter>

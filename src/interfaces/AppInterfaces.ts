@@ -8,6 +8,15 @@ export enum SubType {
   Premium = 'premium'
 }
 
+export const PetTypes = [
+  "Dog",
+  "Cat",
+  "Bird",
+  "Fish",
+  "Reptile",
+  "Other"
+];
+
 export interface Post {
   status: string;
   applicantEmail: string;
