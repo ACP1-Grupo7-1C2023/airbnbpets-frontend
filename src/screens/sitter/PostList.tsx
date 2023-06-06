@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Button, Checkbox, Flex, FormControl, FormLabel, Input, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { SitterHeader } from "../../components/header/SitterHeader";
 import "../../styles/Post.scss";
 import { PostItem, PostsList } from "../../components/post/PostItem";
@@ -8,6 +8,7 @@ import { ShowError } from "../../components/ShowError";
 import "../../styles/Search.scss"
 import { getDistance } from "../../utils/geoCoding";
 import { MapModal, PostMarker } from "../../components/MapModal";
+import { PetTypes } from "../../interfaces/AppInterfaces";
 
 type Filters = {
   location: {
@@ -17,6 +18,7 @@ type Filters = {
   radio: number;
   startAt: string;
   finishAt: string;
+  petTypes: string[];
 }
 
 export const PostList = () => {
@@ -27,13 +29,15 @@ export const PostList = () => {
     location: undefined,
     radio: 20,
     startAt: '',
-    finishAt: ''
+    finishAt: '',
+    petTypes: []
   });
   const [currentFilters, setCurrentFilters] = useState<Filters>({
     location: undefined,
     radio: 20,
     startAt: '',
-    finishAt: ''
+    finishAt: '',
+    petTypes: []
   });
   const [mapModal, setMapModal] = useState(true);
 
@@ -167,7 +171,29 @@ export const PostList = () => {
               }} type="date" /> 
             </FormControl>
           </Flex>
-          <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
+          <FormControl mt={2}>
+            <FormLabel>Pet Types</FormLabel>
+            <Stack mb={2} spacing={6} direction='row'>
+              {PetTypes.map((petType) => (
+                <Checkbox colorScheme='green' key={petType} onChange={(e) => {
+                  if (e.target.checked) { 
+                    setFilters({
+                      ...filters,
+                      petTypes: [...filters.petTypes, petType]
+                    })
+                  } else {
+                    setFilters({
+                      ...filters,
+                      petTypes: filters.petTypes.filter((pet) => pet !== petType)
+                    })
+                  }
+                }}>
+                  {petType}
+                </Checkbox>
+              ))}
+            </Stack>
+          </FormControl>
+          <Button mt={2} w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
             setMapModal(true);
           }}>Open Map</Button>
           <Button w="100%" size="md" pt="4" pb="4" pl="8" pr="8" onClick={() => {
@@ -195,6 +221,9 @@ export const PostList = () => {
           })
           .filter((post) => (currentFilters.startAt !== "") ? post.startAt.split('T')[0] === currentFilters.startAt : true)
           .filter((post) => (currentFilters.finishAt !== "") ? post.finishAt.split('T')[0] === currentFilters.finishAt : true)
+          .filter((post) => (currentFilters.petTypes.length > 0) ? (
+            currentFilters.petTypes.every((petType) => post.pets.includes(petType))
+          ) : true)
           .map((post) => (
           <PostItem key={post.id} post={post} />
         ))}

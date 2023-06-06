@@ -15,6 +15,7 @@ interface Post {
   finishAt: string;
   homeUrls: string[];
   petUrls: string[];
+  pets: string[];
 }
 
 export const PostItem = ({ post }: { post: Post }) => {
