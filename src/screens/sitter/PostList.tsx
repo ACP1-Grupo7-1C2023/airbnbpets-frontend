@@ -222,7 +222,7 @@ export const PostList = () => {
           .filter((post) => (currentFilters.startAt !== "") ? post.startAt.split('T')[0] === currentFilters.startAt : true)
           .filter((post) => (currentFilters.finishAt !== "") ? post.finishAt.split('T')[0] === currentFilters.finishAt : true)
           .filter((post) => (currentFilters.petTypes.length > 0) ? (
-            currentFilters.petTypes.every((petType) => post.pets.includes(petType))
+            post.pets.every((pet) => currentFilters.petTypes.includes(pet))
           ) : true)
           .map((post) => (
           <PostItem key={post.id} post={post} />
