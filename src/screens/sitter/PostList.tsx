@@ -7,7 +7,7 @@ import api from "../../api";
 import { ShowError } from "../../components/ShowError";
 import "../../styles/Search.scss"
 import { getDistance } from "../../utils/geoCoding";
-import { MapModal } from "../../components/MapModal";
+import { MapModal, PostMarker } from "../../components/MapModal";
 
 type Filters = {
   location: {
@@ -110,23 +110,31 @@ export const PostList = () => {
     );
   }
 
+  const getMarkers = (): PostMarker[] => {
+    return posts.map((p) => {
+      const [latitude, longitude] = p.location.split('|').map((value) => parseFloat(value));
+      if (isNaN(latitude) || isNaN(longitude)) {
+        return null;
+      }
+      return {
+        latitude,
+        longitude,
+        id: p.id,
+        title: p.title,
+        image: p.homeUrls[0] || '',
+        description: p.description,
+      } as PostMarker;
+    }).filter((marker): marker is PostMarker => marker !== null);
+  };
+
   return (
     <div className="post_container">
       <SitterHeader />
       <MapModal
         isOpen={mapModal}
         onClose={() => { setMapModal(false) }}
-        markers={posts.map((p) => {
-          const [latitude, longitude] = p.location.split('|').map((value) => parseFloat(value));
-          return {
-            latitude,
-            longitude,
-            id: p.id,
-            title: p.title,
-            image: p.homeUrls[0] || '',
-            description: p.description,
-          }
-        })}/>
+        markers={getMarkers()}
+      />
       <div className="post_list_container">
         <Flex
           direction="column"

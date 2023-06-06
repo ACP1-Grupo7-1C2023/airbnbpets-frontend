@@ -11,17 +11,19 @@ import { useNavigate } from 'react-router-dom';
 
 const MAPBOX_TOKEN = 'pk.eyJ1IjoibmFodWNhc3RybyIsImEiOiJjbGlhYTAwcmgwMWRmM2VseDkyNWhjaDR1In0.tHQepuLTFZYdI8XuIpyBjg';
 
+export interface PostMarker {
+  latitude: number,
+  longitude: number,
+  id: number,
+  title: string,
+  image: string,
+  description: string,
+}
+
 type MapComponentProps = {
   isOpen: boolean,
   onClose: () => void,
-  markers: {
-    latitude: number,
-    longitude: number,
-    id: number,
-    title: string,
-    image: string,
-    description: string,
-  }[]
+  markers: PostMarker[]
 }
 
 export const MapModal = ({ isOpen, onClose, markers }: MapComponentProps) => {
