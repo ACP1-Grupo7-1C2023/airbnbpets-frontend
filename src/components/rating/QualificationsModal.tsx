@@ -1,6 +1,6 @@
-import { Button, Center, Divider, Flex, Heading, Icon, Modal,
+import { Button, Center, Divider, Flex, Icon, Input, InputGroup, InputLeftAddon, InputRightAddon, Modal,
   ModalBody, ModalCloseButton, ModalContent, ModalFooter,
-  ModalHeader, ModalOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
+  ModalHeader, ModalOverlay, Text, Textarea } from "@chakra-ui/react";
 import { Qualification } from "../../interfaces/AppInterfaces";
 import { Stars } from "./Stars";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import { MdAdd, MdRemove } from "react-icons/md";
 
 type QualificationsModalProps = {
   isOpen: boolean;
-  onNewQualification: (score: number, rating: string) => void;
+  onNewQualification: (score: number, rating: string, tip: number) => void;
   onClose: () => void;
   qualifications: Qualification[];
   loading?: boolean;
@@ -18,6 +18,7 @@ type QualificationsModalProps = {
 export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, qualifications, canAdd, loading }: QualificationsModalProps) => {
   const [score, setScore] = useState(3);
   const [rating, setRating] = useState('');
+  const [tip, setTip] = useState<number>(0);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -30,13 +31,19 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
             {qualifications.length === 0 && (
               <Text p="4">No ratings yet</Text>
             )}
-            {qualifications.map((qualification, index) => {
+            {qualifications.map((rating, index) => {
               return (
                 <>
                   <Flex direction='column' align='flex-start' justifyContent="flexStart" gap={1}>
-                    <Stars score={qualification.score} />
-                    <Text>{qualification.rating}</Text>
+                    <Stars score={rating.score} />
+                    <Text flex={1}>{rating.rating}</Text>
+                    {rating.tip > 0 && (
+                      <Text color="teal.500">Tip: {rating.tip} ARS$</Text>
+                    )}
                   </Flex>
+                  {index !== qualifications.length - 1 && (
+                    <Divider orientation='horizontal' />
+                  )}
                 </>
               )
             })}
@@ -59,7 +66,12 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
                     <Icon as={MdAdd} />
                   </Center>
                 </Flex>
-                <Button alignSelf="flex-end" isLoading={loading} colorScheme="teal" onClick={() => onNewQualification(score, rating)}>
+                <InputGroup mb={4}>
+                  <InputLeftAddon children='Leave a tip' />
+                  <Input onChange={(e) => { setTip(Number.parseInt(e.target.value)) }} value={tip === 0 ? '' : tip} type="number" placeholder='Enter amount' />
+                  <InputRightAddon children='ARS' />
+                </InputGroup>
+                <Button alignSelf="flex-end" isLoading={loading} colorScheme="teal" onClick={() => onNewQualification(score, rating, tip)}>
                   Post
                 </Button>
               </Flex>

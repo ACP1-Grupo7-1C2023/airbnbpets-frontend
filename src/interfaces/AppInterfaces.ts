@@ -43,4 +43,5 @@ export interface Applications {
 export interface Qualification {
   score: number;
   rating: string;
+  tip: number;
 }

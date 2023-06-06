@@ -1,4 +1,4 @@
-import { Button, Center, Divider, Flex, Icon, Modal,
+import { Button, Center, Divider, Flex, Icon, Input, InputGroup, InputLeftAddon, InputRightAddon, Modal,
   ModalBody, ModalCloseButton, ModalContent, ModalFooter,
   ModalHeader, ModalOverlay, Spinner, Text, Textarea, VStack, useToast } from "@chakra-ui/react";
 import { Qualification } from "../../interfaces/AppInterfaces";
@@ -19,6 +19,7 @@ type Props = {
 export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true }: Props) => {
   const [score, setScore] = useState(3);
   const [rating, setRating] = useState('');
+  const [tip, setTip] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadingPost, setLoadingPost] = useState(false);
   const [ratings, setRatings] = useState<Qualification[]>([]);
@@ -41,7 +42,7 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
     if (!sitterEmail) return;
     setLoading(true);
     getRatings();
-  }, [sitterEmail]);
+  }, [sitterEmail, onClose, toast]);
 
   const onPostRating = async () => {
     setLoadingPost(true);
@@ -52,6 +53,7 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
         postId,
         rating,
         score,
+        tip,
         hostEmail: session?.email,
       }, {
         headers: {
@@ -109,8 +111,14 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
                 <>
                   <Flex direction='column' align='flex-start' justifyContent="flexStart" gap={1}>
                     <Stars score={rating.score} />
-                    <Text>{rating.rating}</Text>
+                    <Text flex={1}>{rating.rating}</Text>
+                    {rating.tip > 0 && (
+                      <Text color="teal.500">Tip: {rating.tip} ARS$</Text>
+                    )}
                   </Flex>
+                  {index !== ratings.length - 1 && (
+                    <Divider orientation='horizontal' />
+                  )}
                 </>
               )
             })}
@@ -133,6 +141,11 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
                     <Icon as={MdAdd} />
                   </Center>
                 </Flex>
+                <InputGroup mb={4}>
+                  <InputLeftAddon children='Leave a tip' />
+                  <Input onChange={(e) => { setTip(Number.parseInt(e.target.value)) }} value={tip === 0 ? '' : tip} type="number" placeholder='Enter amount' />
+                  <InputRightAddon children='ARS' />
+                </InputGroup>
                 <Button alignSelf="flex-end" isLoading={loadingPost} colorScheme="teal" onClick={onPostRating}>
                   Post
                 </Button>

@@ -79,13 +79,14 @@ export const SitterPost = () => {
     }
   }
 
-  const newQualification = async (score: number, rating: string) => {
+  const newQualification = async (score: number, rating: string, tip: number) => {
     try {
       setLoading(true);
       await api.post("/qualify/user", {
         "postId": id,
         rating,
         score,
+        tip,
         type: "host",
         hostEmail: post?.hostEmail,
         petSitterEmail: session?.email,

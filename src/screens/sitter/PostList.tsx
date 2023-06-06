@@ -39,7 +39,7 @@ export const PostList = () => {
     finishAt: '',
     petTypes: []
   });
-  const [mapModal, setMapModal] = useState(true);
+  const [mapModal, setMapModal] = useState(false);
 
   useEffect(() => {
     const getPosts = async () => {
