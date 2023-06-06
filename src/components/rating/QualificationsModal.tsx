@@ -25,23 +25,22 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
       <ModalContent>
         <ModalHeader>Ratings</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <VStack>
+        <ModalBody mb="4">
+          <Flex direction="column" align="flex-start" gap={3}>
             {qualifications.length === 0 && (
               <Text p="4">No ratings yet</Text>
             )}
             {qualifications.map((qualification, index) => {
               return (
                 <>
-                    <Flex direction='column' align='center' gap={2}>
-                      <Text>{qualification.rating}</Text>
-                      <Stars score={qualification.score} />
-                    </Flex>
-                  <Divider />
+                  <Flex direction='column' align='flex-start' justifyContent="flexStart" gap={1}>
+                    <Stars score={qualification.score} />
+                    <Text>{qualification.rating}</Text>
+                  </Flex>
                 </>
               )
             })}
-          </VStack>
+          </Flex>
         </ModalBody>
         {canAdd && (
           <>
@@ -60,12 +59,9 @@ export const QualificationsModal = ({ isOpen, onNewQualification ,onClose, quali
                     <Icon as={MdAdd} />
                   </Center>
                 </Flex>
-                <Flex alignItems="center" direction="row" gap={10} p={4}>
-                  <Button isLoading={loading} colorScheme="teal" mr={3} onClick={() => onNewQualification(score, rating)}>
-                    Post
-                  </Button>
-                  <Button variant="ghost" onClick={onClose}>Close</Button>
-                </Flex>
+                <Button alignSelf="flex-end" isLoading={loading} colorScheme="teal" onClick={() => onNewQualification(score, rating)}>
+                  Post
+                </Button>
               </Flex>
             </ModalFooter>
           </>

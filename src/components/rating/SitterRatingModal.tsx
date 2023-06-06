@@ -64,6 +64,8 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
     } catch (error: any) {
       if (error?.response && error.response.data.name === "UserNotAllowedToQualifyError") {
         toast({ title: "You are not allowed to qualify this user", status: "error" });
+      } else if (error?.response && error.response.data.name === "QualificationAlreadyMadeError") {
+        toast({ title: "You have already rated this user", status: "error" });
       } else if (error?.response && error.response.data.code === 401) {
         dispatch(logout());
       } else {
@@ -98,22 +100,21 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
         <ModalHeader>Ratings</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <VStack>
+          <Flex direction="column" align="flex-start" gap={3}>
             {ratings.length === 0 && (
               <Text p="4">No ratings yet</Text>
             )}
             {ratings.map((rating, index) => {
               return (
                 <>
-                    <Flex direction='column' align='center' gap={2}>
-                      <Text>{rating.rating}</Text>
-                      <Stars score={rating.score} />
-                    </Flex>
-                  <Divider />
+                  <Flex direction='column' align='flex-start' justifyContent="flexStart" gap={1}>
+                    <Stars score={rating.score} />
+                    <Text>{rating.rating}</Text>
+                  </Flex>
                 </>
               )
             })}
-          </VStack>
+          </Flex>
         </ModalBody>
         {canAdd && (
           <>
@@ -132,12 +133,9 @@ export const SitterRatingModal = ({ postId, onClose, sitterEmail, canAdd = true 
                     <Icon as={MdAdd} />
                   </Center>
                 </Flex>
-                <Flex alignItems="center" direction="row" gap={10} p={4}>
-                  <Button isLoading={loadingPost} colorScheme="teal" mr={3} onClick={onPostRating}>
-                    Post
-                  </Button>
-                  <Button variant="ghost" onClick={onClose}>Close</Button>
-                </Flex>
+                <Button alignSelf="flex-end" isLoading={loadingPost} colorScheme="teal" onClick={onPostRating}>
+                  Post
+                </Button>
               </Flex>
             </ModalFooter>
           </>
