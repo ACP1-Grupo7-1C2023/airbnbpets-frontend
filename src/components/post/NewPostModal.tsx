@@ -29,7 +29,7 @@ const schema = yup.object().shape({
 });
 
 export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, onClose: () => void, onSuccess: () => void }) => {
-  const { register, handleSubmit, formState: { errors }, watch, reset } = useForm<PostInputs>({
+  const { register, handleSubmit, formState: { errors }, watch, reset, setError } = useForm<PostInputs>({
     resolver: yupResolver(schema),
   });
   const dispatch = useAppDispatch();
@@ -47,6 +47,17 @@ export const NewPostModal = ({ isOpen, onClose, onSuccess }: { isOpen: boolean, 
   const [position, setPosition] = useState<{ latitude: number, longitude: number }>();
 
   const onSubmit = async (data: PostInputs) => {
+    const startAt = new Date(data.startAt);
+    const finishAt = new Date(data.finishAt);
+    const today = new Date();
+    if (startAt < today) {
+      setError('startAt', { message: 'Start date must be bigger than today' });
+      return;
+    }
+    if (finishAt < startAt) {
+      setError('finishAt', { message: 'Finish date must be after start date' });
+      return;
+    }
     setLoading(true);
     try {
       const startAt = new Date(data.startAt).toISOString().split('T')[0];
