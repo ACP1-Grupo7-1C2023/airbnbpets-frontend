@@ -35,7 +35,7 @@ export const PostList = () => {
     startAt: '',
     finishAt: ''
   });
-  const [mapModal, setMapModal] = useState(true);
+  const [mapModal, setMapModal] = useState(false);
 
   useEffect(() => {
     const getPosts = async () => {
