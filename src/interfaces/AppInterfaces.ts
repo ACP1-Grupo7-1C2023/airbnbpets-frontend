@@ -30,6 +30,7 @@ export interface Post {
   petUrls: string[];
   hostEmail: string;
   applicants: number;
+  pets: string[];
 }
 
 export interface Applications {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SitterHeader } from "../../components/header/SitterHeader";
-import { Accordion, Button, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { Accordion, Button, Card, Container, Flex, Heading, Icon, Skeleton, SkeletonText, Stack, Text, VStack, useDisclosure, useToast } from "@chakra-ui/react";
 import { MdCalendarMonth, MdLocationPin, MdPerson } from "react-icons/md";
 import { parseDate } from "../../utils/date";
 import api from "../../api";
@@ -14,6 +14,7 @@ import { ImagesGallery } from "../../components/ImagesGallery";
 import { FaArrowLeft } from "react-icons/fa";
 import { QualificationsModal } from "../../components/rating/QualificationsModal";
 import { Stars } from "../../components/rating/Stars";
+import { PetTypeBadge } from "../../components/PetTypeBadge";
 
 export const SitterPost = () => {
   const { id } = useParams();
@@ -203,6 +204,11 @@ export const SitterPost = () => {
             <Container flex={1} m="0px">
               <Heading size="lg">{post.title}</Heading>
               <Text mt="4px">{post.description}</Text>
+              <Stack mt={4} spacing={4} direction='row'>
+                {post.pets.map((pet) => (
+                  <PetTypeBadge type={pet} />
+                ))}
+              </Stack>
               <Flex direction='row' align='center' gap={2} mt="20px">
                 <Icon as={MdPerson} />
                 <Text>
@@ -213,13 +219,13 @@ export const SitterPost = () => {
                 )}
                 <Button colorScheme="teal" size="sm" onClick={onOpenHostQualification}>Ratings</Button>
               </Flex>
-              <Flex direction='row' align='center' gap={2} mt="8px">
+              <Flex direction='row' align='center' gap={2} mt="4px">
                 <Icon as={MdLocationPin} />
                 <Text>
                   {post.location.split("|")[2] || post.location.split("|")[1] || post.location.split("|")[0]}
                 </Text>
               </Flex>
-              <Flex direction='row' align='center' gap={2} mt="8px">
+              <Flex direction='row' align='center' gap={2} mt="4px">
                 <Icon as={MdCalendarMonth} />
                 <Text>
                   {parseDate(post.startAt)} - {parseDate(post.finishAt)}
