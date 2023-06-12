@@ -71,7 +71,7 @@ export const HostPost = () => {
       <div className="single_post_container">
         <HostHeader />
         <ErrorAlert error={error} onClose={() => { setError(''); navigate(-1); }} />
-        <VStack w="1100px" mt="50px" ml="50px" mr="50px" mb="50px">
+        <VStack w="1000px" mt="50px" ml="50px" mr="50px" mb="50px">
           <Flex flexDirection="row" gap="50px">
             <Skeleton height="250px" w="400px" />
             <Flex flexDirection="column">
