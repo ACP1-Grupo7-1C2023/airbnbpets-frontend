@@ -78,6 +78,16 @@ export const Subscriptions = () => {
                   <Text key={index} fontSize='lg' className="sub_feature">{feature}</Text>
                 ))}
               </div>
+              {sub.id === SubType.Basic && selected === SubType.Basic && (
+                <Button 
+                  className="select_sub_btn select_sub_btn_disabled"
+                  isLoading={loading}
+                >
+                  <Text fontSize='lg' fontWeight="bold">
+                    Selected
+                  </Text>
+                </Button>
+              )}
               {sub.id !== SubType.Basic && (
                 <Button 
                   className={`select_sub_btn ${selected === sub.id && "select_sub_btn_disabled"}`}
